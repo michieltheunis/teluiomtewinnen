@@ -1,0 +1,2367 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Te Lui Om Te Winnen — Quizploeg uit Lommel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===== Te Lui Om Te Winnen — onepager ===== */
+
+:root {
+  --teal: #5F7773;
+  --teal-deep: #3E524F;
+  --teal-ink: #2A3836;
+  --orange: #E59A4F;
+  --orange-deep: #C97F35;
+  --bone: #F2EEE6;
+  --bone-warm: #E9E2D3;
+  --paper: #FBF8F1;
+  --ink: #1B2422;
+  --rule: rgba(43, 56, 54, 0.18);
+  --rule-strong: rgba(43, 56, 54, 0.45);
+  --panel-bg: #3E524F;
+  --panel-fg: #F2EEE6;
+  --panel-fg-soft: rgba(242, 238, 230, 0.65);
+  --panel-rule: rgba(242, 238, 230, 0.2);
+
+  --font-display: "Newsreader", "Source Serif 4", Georgia, serif;
+  --font-body: "Manrope", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+}
+
+/* ----- Color modes ----- */
+body[data-mode="dark"] {
+  --teal: #9DB5B0;
+  --teal-deep: #C5D2CF;     /* used for small/secondary text — must be light in dark mode */
+  --teal-ink: #F0EAD9;      /* primary headings */
+  --orange: #F0A95C;
+  --orange-deep: #E59A4F;
+  --bone: #151C1B;
+  --bone-warm: #1E2725;
+  --paper: #0E1413;
+  --ink: #E9E2D3;
+  --rule: rgba(233, 226, 211, 0.14);
+  --rule-strong: rgba(233, 226, 211, 0.35);
+  --panel-bg: #0A0F0E;       /* mottos + contact background in dark mode */
+  --panel-fg: #F0EAD9;
+}
+body[data-mode="dark"] .nav { background: linear-gradient(to bottom, var(--paper) 60%, transparent); }
+body[data-mode="dark"] .nav.is-stuck { background: color-mix(in oklab, var(--paper) 85%, transparent); border-bottom-color: var(--rule); }
+
+body[data-mode="warm"] {
+  --teal: #5F7773;
+  --teal-deep: #4A3E37;
+  --teal-ink: #2D2420;
+  --orange: #E59A4F;
+  --bone: #ECE0CC;
+  --bone-warm: #DECDB1;
+  --paper: #F1E6D2;
+  --ink: #2D2420;
+  --rule: rgba(45, 36, 32, 0.22);
+  --rule-strong: rgba(45, 36, 32, 0.5);
+  --panel-bg: #2D2420;
+  --panel-fg: #ECE0CC;
+  --panel-fg-soft: rgba(236, 224, 204, 0.65);
+  --panel-rule: rgba(236, 224, 204, 0.2);
+}
+
+/* ----- Type modes ----- */
+body[data-type="sans"] {
+  --font-display: "Manrope", system-ui, sans-serif;
+}
+body[data-type="mix"] {
+  --font-display: "Newsreader", serif;
+  --font-body: "Manrope", sans-serif;
+}
+
+/* ----- Base ----- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--orange); color: var(--teal-deep); }
+
+a { color: inherit; }
+
+/* ----- Layout helpers ----- */
+.shell {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 56px;
+}
+
+.rule { height: 1px; background: var(--rule); width: 100%; }
+.rule-strong { height: 1px; background: var(--rule-strong); }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--teal-deep);
+  opacity: 0.85;
+}
+
+.section-num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--teal-deep);
+  opacity: 0.7;
+}
+
+.h-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 0.95;
+  color: var(--teal-ink);
+  text-wrap: balance;
+}
+
+.body-prose {
+  font-family: var(--font-body);
+  max-width: 56ch;
+  text-wrap: pretty;
+  color: color-mix(in oklab, var(--ink) 88%, transparent);
+}
+
+/* ----- Top nav ----- */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 56px;
+  background: linear-gradient(to bottom, var(--paper) 60%, transparent);
+  transition: background 0.4s ease, backdrop-filter 0.4s ease;
+}
+.nav.is-stuck {
+  background: color-mix(in oklab, var(--paper) 85%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--rule);
+}
+.nav {
+  transform: translateY(0);
+  transition: transform 0.35s ease, background 0.4s ease, backdrop-filter 0.4s ease;
+  will-change: transform;
+}
+.nav.is-hidden {
+  transform: translateY(-100%);
+}
+.nav-logo {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  flex-shrink: 0;
+}
+.nav-logo img {
+  height: 44px;
+  width: auto;
+  max-width: none;
+  display: block;
+  object-fit: contain;
+}
+body[data-mode="warm"] .nav-logo img {
+  filter: brightness(0) invert(0.18);
+}
+.nav-mark {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--teal-deep);
+}
+.nav-mark .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--orange) 30%, transparent);
+}
+/* ---- Hamburger button ---- */
+.nav-burger {
+  background: transparent;
+  border: 1px solid var(--rule-strong);
+  border-radius: 0;
+  width: 44px;
+  height: 44px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
+}
+.nav-burger:hover { background: color-mix(in oklab, var(--orange) 12%, transparent); }
+.nav-burger span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--teal-ink);
+  border-radius: 1px;
+  transition: transform 0.3s ease, opacity 0.2s ease;
+}
+body[data-mode="dark"] .nav-burger { border-color: rgba(240, 234, 217, 0.4); }
+body[data-mode="dark"] .nav-burger span { background: var(--paper-fg); }
+.nav-burger.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-burger.is-open span:nth-child(2) { opacity: 0; }
+.nav-burger.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ---- Drawer ---- */
+.nav-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  background: color-mix(in oklab, var(--ink) 30%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.nav-drawer.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.nav-drawer-inner {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: min(420px, 86vw);
+  background: var(--paper);
+  border-left: 1px solid var(--rule-strong);
+  padding: 110px 48px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.22, 0.8, 0.3, 1);
+  font-family: var(--font-display);
+}
+.nav-drawer.is-open .nav-drawer-inner { transform: translateX(0); }
+.nav-drawer-inner a {
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: var(--teal-ink);
+  text-decoration: none;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+  transition: color 0.2s, padding-left 0.2s;
+}
+.nav-drawer-inner a:hover {
+  color: var(--orange-deep);
+  padding-left: 12px;
+}
+body[data-mode="dark"] .nav-drawer-inner { background: var(--panel-bg); border-left-color: var(--panel-rule); }
+body[data-mode="dark"] .nav-drawer-inner a { color: var(--panel-fg); border-bottom-color: var(--panel-rule); }
+
+.nav-links {
+  display: flex; gap: 28px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+.nav-links a {
+  text-decoration: none;
+  color: var(--teal-deep);
+  opacity: 0.7;
+  transition: opacity 0.2s, color 0.2s;
+}
+.nav-links a:hover { opacity: 1; color: var(--orange-deep); }
+
+/* ----- HERO ----- */
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: end;
+  padding: 70px 0 140px;
+  overflow: hidden;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: end;
+}
+
+.hero-statement {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(64px, 11vw, 168px);
+  line-height: 0.88;
+  letter-spacing: -0.035em;
+  color: var(--teal-ink);
+  margin: 0;
+}
+.hero-statement em {
+  font-style: italic;
+  color: var(--orange-deep);
+  font-weight: 300;
+}
+
+.hero-side {
+  display: flex; flex-direction: column; gap: 28px;
+  padding-bottom: 16px;
+  margin-top: -2.4em;
+}
+
+.hero-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+  border-top: 1px solid var(--rule-strong);
+  padding-top: 18px;
+  max-width: 460px;
+}
+.hero-meta b { display: block; color: var(--teal-ink); font-weight: 500; margin-top: 4px; letter-spacing: 0.16em; }
+
+.hero-tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1.35;
+  color: var(--teal-deep);
+  max-width: 380px;
+}
+
+.hero-marquee-wrap {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  overflow: hidden;
+  background: color-mix(in oklab, var(--bone) 60%, transparent);
+}
+.hero-marquee {
+  display: flex;
+  white-space: nowrap;
+  animation: marq 60s linear infinite;
+  font-family: var(--font-display);
+  font-size: 22px;
+  padding: 14px 0;
+  color: var(--teal-deep);
+}
+.hero-marquee span { padding: 0 28px; }
+.hero-marquee .sep { color: var(--orange); }
+@keyframes marq {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ----- Logo block in hero ----- */
+.hero-logo {
+  position: absolute;
+  top: 110px;
+  right: 56px;
+  width: 280px;
+  opacity: 0.95;
+  pointer-events: none;
+  transform-origin: center;
+}
+
+/* ----- Section frame ----- */
+.section {
+  padding: 140px 0;
+  position: relative;
+}
+.section-head {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 40px;
+  align-items: baseline;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--rule-strong);
+  margin-bottom: 80px;
+}
+.section-head h2 {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(48px, 7vw, 104px);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: var(--teal-ink);
+  margin: 0;
+  text-wrap: balance;
+}
+.section-head h2 em { color: var(--orange-deep); font-style: italic; font-weight: 300; }
+.section-head .meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--teal-deep);
+  opacity: 0.8;
+}
+
+/* ----- ABOUT ----- */
+.about {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.about-stats-wrap {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+}
+.about-lead {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 3.4vw, 44px);
+  line-height: 1.15;
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  color: var(--teal-ink);
+  margin: 0 0 28px 0;
+}
+.about-lead em { color: var(--orange-deep); font-style: italic; }
+.about-body p {
+  margin: 0 0 16px;
+  color: color-mix(in oklab, var(--ink) 80%, transparent);
+  max-width: 56ch;
+}
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border: 1px solid var(--rule-strong);
+}
+.stat {
+  padding: 28px 24px;
+  border-right: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule-strong);
+}
+.stat:nth-child(2n) { border-right: none; }
+.stat:nth-last-child(-n+2) { border-bottom: none; }
+.stat .num {
+  font-family: var(--font-display);
+  font-size: 64px;
+  line-height: 1;
+  font-weight: 300;
+  color: var(--teal-ink);
+  letter-spacing: -0.03em;
+}
+.stat .num em { color: var(--orange-deep); font-style: italic; }
+.stat .lab {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--teal-deep);
+  margin-top: 10px;
+  display: block;
+  opacity: 0.85;
+}
+
+/* ----- MOTTOS ----- */
+.mottos {
+  background: var(--panel-bg);
+  color: var(--panel-fg);
+  padding: 120px 0;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.mottos .shell { position: relative; z-index: 2; }
+.mottos h3 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--orange);
+  margin: 0 0 60px;
+}
+.motto-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+.motto {
+  padding: 32px 0;
+  border-top: 1px solid var(--panel-rule);
+  display: grid;
+  grid-template-columns: 60px 1fr 200px;
+  gap: 32px;
+  align-items: baseline;
+}
+.motto:last-child { border-bottom: 1px solid var(--panel-rule); }
+.motto .n {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--orange);
+  opacity: 0.9;
+}
+.motto .q {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(22px, 2.6vw, 38px);
+  line-height: 1.2;
+  color: var(--panel-fg);
+  letter-spacing: -0.01em;
+}
+.motto .a {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--panel-fg-soft);
+  text-align: right;
+}
+
+/* ----- KALENDER ----- */
+.kalender-list {
+  display: flex;
+  flex-direction: column;
+}
+.kal-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 200px;
+  grid-template-areas: "date main where";
+  gap: 28px;
+  align-items: center;
+  padding: 28px 0;
+  border-top: 1px solid var(--rule-strong);
+  position: relative;
+  cursor: default;
+  transition: padding 0.4s cubic-bezier(.2,.8,.2,1);
+}
+.kal-row > .kal-date { grid-area: date; }
+.kal-row > .kal-main { grid-area: main; display: flex; flex-direction: column; gap: 6px; }
+.kal-row > .where { grid-area: where; text-align: right; }
+.kal-row:last-child { border-bottom: 1px solid var(--rule-strong); }
+.kal-row:hover { padding-left: 12px; }
+.kal-row .date-d {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--teal-ink);
+  letter-spacing: -0.03em;
+}
+.kal-row .date-m {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--teal-deep);
+  margin-top: 6px;
+  display: block;
+}
+.kal-row .name {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1.1;
+  color: var(--teal-ink);
+  font-weight: 400;
+}
+.kal-row .where {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--teal-deep);
+  opacity: 0.85;
+}
+.kal-row .ploeg {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--teal-deep);
+  opacity: 0.78;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+.kal-row .ploeg .qmark { color: var(--orange-deep); font-weight: 600; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* ----- UITSLAGEN ----- */
+.uit-wrap {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 60px;
+  align-items: start;
+}
+.uit-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+}
+.uit-table thead th {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--teal-deep);
+  opacity: 0.7;
+  text-align: left;
+  padding: 0 0 14px;
+  border-bottom: 1px solid var(--rule-strong);
+  font-weight: 500;
+}
+.uit-table tbody td {
+  padding: 22px 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: middle;
+  font-size: 13px;
+}
+.uit-table .quiz-name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--teal-ink);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.uit-table .date {
+  color: var(--teal-deep);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  width: 160px;
+}
+.uit-table .place { width: 100px; }
+.uit-table .pos {
+  text-align: right;
+  width: 140px;
+  font-family: var(--font-display);
+  font-size: 22px;
+}
+.uit-table .pos .rank {
+  color: var(--teal-ink);
+  font-weight: 400;
+}
+.uit-table .pos .of {
+  color: var(--teal-deep);
+  opacity: 0.55;
+  font-size: 16px;
+}
+.uit-table tr.podium .pos .rank { color: var(--orange-deep); }
+.uit-table tr.podium .quiz-name { color: var(--teal-ink); }
+.uit-table tr.youth-win .quiz-name::after {
+  content: "★ Beste jongerenploeg";
+  display: inline-block;
+  margin-left: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--orange-deep);
+  vertical-align: middle;
+  padding: 4px 8px;
+  border: 1px solid var(--orange-deep);
+}
+
+/* ----- Season tabs (scrollable) ----- */
+.season-tabs-wrap {
+  position: relative;
+  margin-top: 40px;
+  margin-bottom: 80px;
+  border: 1px solid var(--rule-strong);
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+.season-tabs-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex: 1;
+}
+.season-tabs-scroll::-webkit-scrollbar { display: none; }
+.season-tabs {
+  display: inline-flex;
+  gap: 0;
+  white-space: nowrap;
+}
+.season-tab {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--teal-deep);
+  background: transparent;
+  border: none;
+  padding: 14px 24px;
+  cursor: pointer;
+  border-right: 1px solid var(--rule-strong);
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+.season-tab:last-child { border-right: none; }
+.season-tab:hover { color: var(--teal-ink); }
+.season-tab.active {
+  background: var(--teal-ink);
+  color: var(--paper);
+}
+body[data-mode="dark"] .season-tab.active { background: var(--orange); color: #1B2422; }
+.season-arrow {
+  background: var(--paper);
+  border: none;
+  border-left: 1px solid var(--rule-strong);
+  color: var(--teal-deep);
+  width: 44px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+.season-arrow:first-of-type { border-left: none; border-right: 1px solid var(--rule-strong); }
+.season-arrow:hover { background: var(--bone-warm); color: var(--orange-deep); }
+.season-arrow:disabled { opacity: 0.25; cursor: default; }
+
+/* keep old single-rule selector for backward compat too */
+
+/* ----- Contact form ----- */
+.contact-form {
+  display: grid;
+  gap: 20px;
+}
+.cf-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.cf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cf-field label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--panel-fg-soft);
+}
+.cf-field input,
+.cf-field textarea,
+.cf-field select {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--panel-rule);
+  color: var(--panel-fg);
+  font-family: var(--font-display);
+  font-size: 22px;
+  letter-spacing: -0.005em;
+  padding: 8px 0 12px;
+  outline: none;
+  font-weight: 300;
+  resize: none;
+  transition: border-color 0.3s;
+}
+.cf-field input:focus,
+.cf-field textarea:focus,
+.cf-field select:focus {
+  border-bottom-color: var(--orange);
+}
+.cf-field input::placeholder,
+.cf-field textarea::placeholder {
+  color: color-mix(in oklab, var(--panel-fg) 35%, transparent);
+  font-style: italic;
+}
+.cf-field textarea {
+  min-height: 90px;
+  font-size: 18px;
+  line-height: 1.4;
+}
+.cf-field select option { color: #1B2422; background: var(--paper); }
+.cf-submit {
+  margin-top: 12px;
+  background: var(--orange);
+  color: #1B2422;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  padding: 18px 28px;
+  cursor: pointer;
+  font-weight: 600;
+  justify-self: start;
+  transition: background 0.2s, transform 0.2s;
+}
+.cf-submit:hover { background: #F0AC68; transform: translateX(4px); }
+.cf-thanks {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 28px;
+  line-height: 1.3;
+  color: var(--panel-fg);
+  letter-spacing: -0.01em;
+  padding: 20px 0;
+}
+.cf-thanks em { color: var(--orange); }
+
+/* ----- Quote strip (replaces hero meta) ----- */
+.hero-quote {
+  border-top: 1px solid var(--rule-strong);
+  padding-top: 22px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--teal-deep);
+  max-width: 460px;
+}
+.hero-quote-attr {
+  display: block;
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--teal-deep);
+  opacity: 0.7;
+}
+
+/* ----- Hero ticker (replaces marquee) ----- */
+.hero-ticker-wrap {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  background: color-mix(in oklab, var(--bone) 60%, transparent);
+  display: grid;
+  grid-template-columns: 220px 1fr 200px;
+  align-items: stretch;
+}
+.hero-ticker-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--paper);
+  background: var(--teal-ink);
+  display: flex;
+  align-items: center;
+  padding: 0 22px;
+  gap: 10px;
+  z-index: 2;
+  position: relative;
+}
+.hero-ticker-label .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--orange);
+  animation: pulse 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.hero-ticker-track {
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.hero-ticker {
+  display: flex;
+  white-space: nowrap;
+  animation: marq 60s linear infinite;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 16px 0;
+  letter-spacing: 0.02em;
+  color: var(--teal-ink);
+  align-items: center;
+}
+.hero-ticker span { padding: 0 18px; display: inline-flex; align-items: center; gap: 10px; }
+.hero-ticker .sep { color: var(--orange); padding: 0 2px; }
+.hero-ticker b { font-weight: 600; color: var(--teal-deep); margin-right: 6px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; }
+.hero-ticker .pos { color: var(--orange-deep); font-weight: 600; }
+
+.hero-ticker-side {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 22px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--teal-deep);
+  border-left: 1px solid var(--rule);
+  background: var(--bone-warm);
+  z-index: 2;
+  position: relative;
+}
+
+@media (max-width: 1100px) {
+  .hero-ticker-wrap { grid-template-columns: 1fr; }
+  .hero-ticker-label, .hero-ticker-side { display: none; }
+  .cf-row { grid-template-columns: 1fr; }
+  .uit-table tr.youth-win .quiz-name::after { display: block; margin: 6px 0 0; }
+}
+
+.uit-side {
+  position: sticky;
+  top: 100px;
+  background: var(--bone-warm);
+  border: 1px solid var(--rule-strong);
+  padding: 36px 32px;
+}
+body[data-mode="dark"] .uit-side { background: #1A2321; }
+.uit-side .label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--teal-deep);
+  margin-bottom: 22px;
+  display: block;
+  opacity: 0.85;
+}
+.uit-side .big {
+  font-family: var(--font-display);
+  font-size: 88px;
+  line-height: 0.9;
+  font-weight: 300;
+  color: var(--teal-ink);
+  letter-spacing: -0.04em;
+  margin: 0 0 8px;
+}
+.uit-side .big em { color: var(--orange-deep); font-style: italic; }
+.uit-side .small {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--teal-deep);
+  opacity: 0.85;
+}
+.uit-side .divider { height: 1px; background: var(--rule-strong); margin: 28px 0; }
+.uit-side .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 8px 0;
+  letter-spacing: 0.04em;
+}
+.uit-side .row .v { color: var(--teal-ink); font-weight: 600; }
+
+/* ----- LEDEN ----- */
+.leden-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rule-strong);
+  border: 1px solid var(--rule-strong);
+}
+.lid {
+  background: var(--paper);
+  padding: 32px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 380px;
+  position: relative;
+  transition: background 0.3s ease;
+}
+.lid:hover { background: var(--bone-warm); }
+.lid .portrait {
+  aspect-ratio: 3 / 4;
+  background:
+    repeating-linear-gradient(135deg,
+      color-mix(in oklab, var(--teal) 22%, transparent) 0 2px,
+      transparent 2px 8px),
+    var(--bone-warm);
+  border: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.lid .portrait::after {
+  content: "PORTRET";
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--teal-deep);
+  opacity: 0.5;
+}
+.lid .num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--teal-deep);
+  opacity: 0.7;
+}
+.lid .name {
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 1;
+  color: var(--teal-ink);
+  letter-spacing: -0.02em;
+  font-weight: 400;
+}
+.lid .role {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--orange-deep);
+}
+.lid .bio {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.5;
+  color: color-mix(in oklab, var(--ink) 78%, transparent);
+  margin-top: auto;
+}
+
+/* ----- MEDIA ----- */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 24px;
+}
+.clip {
+  border: 1px solid var(--rule-strong);
+  background: var(--paper);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.5s cubic-bezier(.2,.8,.2,1);
+}
+.clip:hover { transform: translateY(-4px); }
+.clip.span-7 { grid-column: span 7; }
+.clip.span-5 { grid-column: span 5; }
+.clip.span-6 { grid-column: span 6; }
+.clip.span-12 { grid-column: span 12; }
+.clip-thumb {
+  background:
+    linear-gradient(transparent 0%, transparent calc(100% - 40px), color-mix(in oklab, var(--teal) 12%, transparent) 100%),
+    repeating-linear-gradient(0deg,
+      color-mix(in oklab, var(--ink) 78%, transparent) 0 1px,
+      transparent 1px 4px),
+    var(--bone-warm);
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+.clip-thumb::before {
+  content: "";
+  position: absolute; top: 18px; left: 18px; right: 60%;
+  height: 14px;
+  background: var(--teal-deep);
+  opacity: 0.7;
+}
+.clip-thumb::after {
+  content: "DE LOMMELSE GAZET";
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: 16px;
+  letter-spacing: 0.05em;
+  color: var(--teal-deep);
+  background: var(--paper);
+  padding: 8px 14px;
+  border: 1px solid var(--rule-strong);
+}
+.clip-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--teal-deep);
+  opacity: 0.85;
+}
+.clip-headline {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1.15;
+  color: var(--teal-ink);
+  letter-spacing: -0.015em;
+  margin: 0;
+  font-weight: 400;
+  text-wrap: balance;
+}
+.clip-headline em { color: var(--orange-deep); font-style: italic; }
+.clip-quote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.4;
+  color: color-mix(in oklab, var(--ink) 75%, transparent);
+  border-left: 2px solid var(--orange);
+  padding-left: 14px;
+}
+
+/* ----- CONTACT ----- */
+.contact {
+  background: var(--panel-bg);
+  color: var(--panel-fg);
+  padding: 140px 0 120px;
+  position: relative;
+  overflow: hidden;
+}
+.contact .shell {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 100px;
+  align-items: start;
+}
+.contact-h {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(48px, 6vw, 96px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--panel-fg);
+  margin: 0;
+}
+.contact-h em { color: var(--orange); font-style: italic; }
+.contact-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.contact-meta .row {
+  border-top: 1px solid var(--panel-rule);
+  padding-top: 14px;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+.contact-meta .row .k {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--panel-fg-soft);
+  padding-top: 2px;
+}
+.contact-meta .row .v {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: 22px;
+  letter-spacing: -0.005em;
+  color: var(--panel-fg);
+}
+.contact-meta .row .v a { text-decoration: none; }
+.contact-meta .row .v a:hover { color: var(--orange); }
+
+.contact-marquee {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: clamp(120px, 18vw, 280px);
+  line-height: 0.85;
+  font-weight: 300;
+  color: color-mix(in oklab, var(--panel-fg) 6%, transparent);
+  letter-spacing: -0.04em;
+  pointer-events: none;
+  user-select: none;
+  overflow: hidden;
+  transform: translateY(28%);
+}
+
+/* ----- FOOTER ----- */
+.footer {
+  background: var(--paper);
+  padding: 48px 0;
+  border-top: 1px solid var(--rule);
+}
+.footer .shell {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--teal-deep);
+  opacity: 0.8;
+}
+
+/* ----- Reveal animation ----- */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1s cubic-bezier(.2,.8,.2,1), transform 1s cubic-bezier(.2,.8,.2,1);
+}
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s cubic-bezier(.2,.8,.2,1), transform 0.9s cubic-bezier(.2,.8,.2,1);
+}
+.reveal-stagger.in > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-stagger.in > *:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger.in > *:nth-child(2) { transition-delay: 80ms; }
+.reveal-stagger.in > *:nth-child(3) { transition-delay: 160ms; }
+.reveal-stagger.in > *:nth-child(4) { transition-delay: 240ms; }
+.reveal-stagger.in > *:nth-child(5) { transition-delay: 320ms; }
+.reveal-stagger.in > *:nth-child(6) { transition-delay: 400ms; }
+.reveal-stagger.in > *:nth-child(7) { transition-delay: 480ms; }
+.reveal-stagger.in > *:nth-child(8) { transition-delay: 560ms; }
+.reveal-stagger.in > *:nth-child(9) { transition-delay: 640ms; }
+.reveal-stagger.in > *:nth-child(10) { transition-delay: 720ms; }
+
+/* ----- Scroll progress bar ----- */
+.scroll-prog {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: var(--orange);
+  z-index: 100;
+  transform-origin: left center;
+  width: 100%;
+  transform: scaleX(0);
+  pointer-events: none;
+}
+
+/* ----- Logo art (used in side decoration) ----- */
+.bg-mark {
+  position: absolute;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: 18vw;
+  line-height: 0.85;
+  color: color-mix(in oklab, var(--teal) 8%, transparent);
+  letter-spacing: -0.04em;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  white-space: nowrap;
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 1100px) {
+  .shell { padding: 0 32px; }
+  .nav { padding: 14px 32px; }
+  .contact { padding: 120px 0 100px; }
+  .contact .shell { padding: 0 32px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .hero-logo { display: none; }
+  .about { grid-template-columns: 1fr; gap: 50px; }
+  .uit-wrap { grid-template-columns: 1fr; }
+  .leden-grid { grid-template-columns: repeat(2, 1fr); }
+  .contact .shell { grid-template-columns: 1fr !important; gap: 60px; }
+  .kal-row { grid-template-columns: 80px 1fr; grid-template-areas: "date main" "sub sub"; gap: 12px 16px; padding: 22px 0; }
+  .kal-row > .where { grid-area: sub; text-align: left; }
+  .kal-row .date-d { font-size: 42px; }
+  .kal-row .name { font-size: 22px; }
+  .clip.span-7, .clip.span-5, .clip.span-6 { grid-column: span 12; }
+  .contact .shell { grid-template-columns: 1fr; gap: 40px; }
+  .section-head { grid-template-columns: 1fr; gap: 18px; }
+  .motto { grid-template-columns: 40px 1fr; }
+  .motto .a { grid-column: 2; text-align: left; }
+  .nav-links { display: none; }
+  .nav-burger { display: inline-flex; }
+}
+
+@media (max-width: 640px) {
+  .shell { padding: 0 22px; }
+  .nav { padding: 12px 22px; }
+  .nav-logo, .nav-logo img { height: 32px; }
+  .nav-burger { width: 40px; height: 40px; }
+  .nav-drawer-inner { padding: 90px 32px 40px; }
+  .section { padding: 80px 0; }
+  .hero { padding: 100px 0 110px; min-height: auto; }
+  .hero-grid { gap: 28px; }
+  .hero-side { margin-top: 0; }
+  .hero-tagline { font-size: 18px; line-height: 1.45; }
+  .hero-quote { font-size: 18px; line-height: 1.4; }
+  .section-head { padding-bottom: 22px; margin-bottom: 50px; }
+  .section-head h2 { font-size: clamp(36px, 11vw, 56px); }
+  .about { gap: 40px; }
+  .about-stats-wrap { position: static; }
+  .about-stats { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .stat .num { font-size: 64px; }
+  .about-lead { font-size: 24px; }
+  .mottos { padding: 80px 0; }
+  .motto { padding: 22px 0; gap: 12px; }
+  .motto .q { font-size: 20px; line-height: 1.35; }
+  .leden-grid { grid-template-columns: 1fr; gap: 0; }
+  .kal-row .date-d { font-size: 36px; }
+  .kal-row .name { font-size: 22px; }
+  .kal-row .ploeg { font-size: 14px; line-height: 1.6; }
+  .uit-table { font-size: 13px; }
+  .uit-table .quiz-name { font-size: 15px; }
+  .uit-table thead th { font-size: 11px; }
+  .uit-table thead th:nth-child(3), .uit-table tbody td:nth-child(3) { display: none; }
+  .uit-side { padding: 28px 22px; position: static; }
+  .uit-side .big { font-size: 80px; }
+  .clip-headline { font-size: 22px; }
+  .footer .shell { flex-direction: column; gap: 12px; text-align: center; }
+  .hero-statement { font-size: clamp(54px, 17vw, 88px); }
+  .season-tab { padding: 12px 18px; font-size: 11px; }
+  .cf-submit { width: 100%; justify-self: stretch; text-align: center; }
+  .contact { padding: 100px 0 90px; }
+  .contact .shell { gap: 50px; }
+  .contact-h { font-size: clamp(40px, 11vw, 60px); }
+  .contact-meta .row .v { font-size: 16px; word-break: break-word; }
+  .cf input, .cf textarea { font-size: 16px; }
+}
+
+</style>
+</head>
+<body data-mode="dark" data-type="sans">
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel">
+
+// tweaks-panel.jsx
+// Reusable Tweaks shell + form-control helpers.
+//
+// Owns the host protocol (listens for __activate_edit_mode / __deactivate_edit_mode,
+// posts __edit_mode_available / __edit_mode_set_keys / __edit_mode_dismissed) so
+// individual prototypes don't re-roll it. Ships a consistent set of controls so you
+// don't hand-draw <input type="range">, segmented radios, steppers, etc.
+//
+// Usage (in an HTML file that loads React + Babel):
+//
+//   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+//     "primaryColor": "#D97757",
+//     "fontSize": 16,
+//     "density": "regular",
+//     "dark": false
+//   }/*EDITMODE-END*/;
+//
+//   function App() {
+//     const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+//     return (
+//       <div style={{ fontSize: t.fontSize, color: t.primaryColor }}>
+//         Hello
+//         <TweaksPanel>
+//           <TweakSection label="Typography" />
+//           <TweakSlider label="Font size" value={t.fontSize} min={10} max={32} unit="px"
+//                        onChange={(v) => setTweak('fontSize', v)} />
+//           <TweakRadio  label="Density" value={t.density}
+//                        options={['compact', 'regular', 'comfy']}
+//                        onChange={(v) => setTweak('density', v)} />
+//           <TweakSection label="Theme" />
+//           <TweakColor  label="Primary" value={t.primaryColor}
+//                        onChange={(v) => setTweak('primaryColor', v)} />
+//           <TweakToggle label="Dark mode" value={t.dark}
+//                        onChange={(v) => setTweak('dark', v)} />
+//         </TweaksPanel>
+//       </div>
+//     );
+//   }
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
+  .twk-body::-webkit-scrollbar{width:8px}
+  .twk-body::-webkit-scrollbar-track{background:transparent;margin:2px}
+  .twk-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:4px;
+    border:2px solid transparent;background-clip:content-box}
+  .twk-body::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.25);
+    border:2px solid transparent;background-clip:content-box}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;
+    color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
+
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-sect:first-child{padding-top:0}
+
+  .twk-field{appearance:none;width:100%;height:26px;padding:0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;
+    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
+  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}
+  select.twk-field{padding-right:22px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>");
+    background-repeat:no-repeat;background-position:right 8px center}
+
+  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;
+    border-radius:999px;background:rgba(0,0,0,.12);outline:none}
+  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:14px;height:14px;border-radius:50%;background:#fff;
+    border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+  .twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+    background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+
+  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
+    background:rgba(0,0,0,.06);user-select:none}
+  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
+  .twk-seg.dragging .twk-seg-thumb{transition:none}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
+    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
+    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;
+    overflow-wrap:anywhere}
+
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
+    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+
+  .twk-num{display:flex;align-items:center;height:26px;padding:0 0 0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6)}
+  .twk-num-lbl{font-weight:500;color:rgba(41,38,27,.6);cursor:ew-resize;
+    user-select:none;padding-right:8px}
+  .twk-num input{flex:1;min-width:0;height:100%;border:0;background:transparent;
+    font:inherit;font-variant-numeric:tabular-nums;text-align:right;padding:0 8px 0 0;
+    outline:none;color:inherit;-moz-appearance:textfield}
+  .twk-num input::-webkit-inner-spin-button,.twk-num input::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0}
+  .twk-num-unit{padding-right:8px;color:rgba(41,38,27,.45)}
+
+  .twk-btn{appearance:none;height:26px;padding:0 12px;border:0;border-radius:7px;
+    background:rgba(0,0,0,.78);color:#fff;font:inherit;font-weight:500;cursor:default}
+  .twk-btn:hover{background:rgba(0,0,0,.88)}
+  .twk-btn.secondary{background:rgba(0,0,0,.06);color:inherit}
+  .twk-btn.secondary:hover{background:rgba(0,0,0,.1)}
+
+  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:22px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:6px;padding:0;cursor:default;
+    background:transparent;flex-shrink:0}
+  .twk-swatch::-webkit-color-swatch-wrapper{padding:0}
+  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5.5px}
+  .twk-swatch::-moz-color-swatch{border:0;border-radius:5.5px}
+`;
+
+// ── useTweaks ───────────────────────────────────────────────────────────────
+// Single source of truth for tweak values. setTweak persists via the host
+// (__edit_mode_set_keys → host rewrites the EDITMODE block on disk).
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  // Accepts either setTweak('key', value) or setTweak({ key: value, ... }) so a
+  // useState-style call doesn't write a "[object Object]" key into the persisted
+  // JSON block.
+  const setTweak = React.useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
+      ? keyOrEdits : { [keyOrEdits]: val };
+    setValues((prev) => ({ ...prev, ...edits }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+  }, []);
+  return [values, setTweak];
+}
+
+// ── TweaksPanel ─────────────────────────────────────────────────────────────
+// Floating shell. Registers the protocol listener BEFORE announcing
+// availability — if the announce ran first, the host's activate could land
+// before our handler exists and the toolbar toggle would silently no-op.
+// The close button posts __edit_mode_dismissed so the host's toolbar toggle
+// flips off in lockstep; the host echoes __deactivate_edit_mode back which
+// is what actually hides the panel.
+function TweaksPanel({ title = 'Tweaks', children }) {
+  const [open, setOpen] = React.useState(false);
+  const dragRef = React.useRef(null);
+  const offsetRef = React.useRef({ x: 16, y: 16 });
+  const PAD = 16;
+
+  const clampToViewport = React.useCallback(() => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    const maxRight = Math.max(PAD, window.innerWidth - w - PAD);
+    const maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
+    offsetRef.current = {
+      x: Math.min(maxRight, Math.max(PAD, offsetRef.current.x)),
+      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y)),
+    };
+    panel.style.right = offsetRef.current.x + 'px';
+    panel.style.bottom = offsetRef.current.y + 'px';
+  }, []);
+
+  React.useEffect(() => {
+    if (!open) return;
+    clampToViewport();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', clampToViewport);
+      return () => window.removeEventListener('resize', clampToViewport);
+    }
+    const ro = new ResizeObserver(clampToViewport);
+    ro.observe(document.documentElement);
+    return () => ro.disconnect();
+  }, [open, clampToViewport]);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);
+      else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const dismiss = () => {
+    setOpen(false);
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  };
+
+  const onDragStart = (e) => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const r = panel.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    const startRight = window.innerWidth - r.right;
+    const startBottom = window.innerHeight - r.bottom;
+    const move = (ev) => {
+      offsetRef.current = {
+        x: startRight - (ev.clientX - sx),
+        y: startBottom - (ev.clientY - sy),
+      };
+      clampToViewport();
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+
+  if (!open) return null;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div ref={dragRef} className="twk-panel" data-noncommentable=""
+           style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+        <div className="twk-hd" onMouseDown={onDragStart}>
+          <b>{title}</b>
+          <button className="twk-x" aria-label="Close tweaks"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={dismiss}>✕</button>
+        </div>
+        <div className="twk-body">{children}</div>
+      </div>
+    </>
+  );
+}
+
+// ── Layout helpers ──────────────────────────────────────────────────────────
+
+function TweakSection({ label, children }) {
+  return (
+    <>
+      <div className="twk-sect">{label}</div>
+      {children}
+    </>
+  );
+}
+
+function TweakRow({ label, value, children, inline = false }) {
+  return (
+    <div className={inline ? 'twk-row twk-row-h' : 'twk-row'}>
+      <div className="twk-lbl">
+        <span>{label}</span>
+        {value != null && <span className="twk-val">{value}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ── Controls ────────────────────────────────────────────────────────────────
+
+function TweakSlider({ label, value, min = 0, max = 100, step = 1, unit = '', onChange }) {
+  return (
+    <TweakRow label={label} value={`${value}${unit}`}>
+      <input type="range" className="twk-slider" min={min} max={max} step={step}
+             value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </TweakRow>
+  );
+}
+
+function TweakToggle({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <button type="button" className="twk-toggle" data-on={value ? '1' : '0'}
+              role="switch" aria-checked={!!value}
+              onClick={() => onChange(!value)}><i /></button>
+    </div>
+  );
+}
+
+function TweakRadio({ label, value, options, onChange }) {
+  const trackRef = React.useRef(null);
+  const [dragging, setDragging] = React.useState(false);
+  const opts = options.map((o) => (typeof o === 'object' ? o : { value: o, label: o }));
+  const idx = Math.max(0, opts.findIndex((o) => o.value === value));
+  const n = opts.length;
+
+  // The active value is read by pointer-move handlers attached for the lifetime
+  // of a drag — ref it so a stale closure doesn't fire onChange for every move.
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
+
+  const segAt = (clientX) => {
+    const r = trackRef.current.getBoundingClientRect();
+    const inner = r.width - 4;
+    const i = Math.floor(((clientX - r.left - 2) / inner) * n);
+    return opts[Math.max(0, Math.min(n - 1, i))].value;
+  };
+
+  const onPointerDown = (e) => {
+    setDragging(true);
+    const v0 = segAt(e.clientX);
+    if (v0 !== valueRef.current) onChange(v0);
+    const move = (ev) => {
+      if (!trackRef.current) return;
+      const v = segAt(ev.clientX);
+      if (v !== valueRef.current) onChange(v);
+    };
+    const up = () => {
+      setDragging(false);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+
+  return (
+    <TweakRow label={label}>
+      <div ref={trackRef} role="radiogroup" onPointerDown={onPointerDown}
+           className={dragging ? 'twk-seg dragging' : 'twk-seg'}>
+        <div className="twk-seg-thumb"
+             style={{ left: `calc(2px + ${idx} * (100% - 4px) / ${n})`,
+                      width: `calc((100% - 4px) / ${n})` }} />
+        {opts.map((o) => (
+          <button key={o.value} type="button" role="radio" aria-checked={o.value === value}>
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </TweakRow>
+  );
+}
+
+function TweakSelect({ label, value, options, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}>
+        {options.map((o) => {
+          const v = typeof o === 'object' ? o.value : o;
+          const l = typeof o === 'object' ? o.label : o;
+          return <option key={v} value={v}>{l}</option>;
+        })}
+      </select>
+    </TweakRow>
+  );
+}
+
+function TweakText({ label, value, placeholder, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <input className="twk-field" type="text" value={value} placeholder={placeholder}
+             onChange={(e) => onChange(e.target.value)} />
+    </TweakRow>
+  );
+}
+
+function TweakNumber({ label, value, min, max, step = 1, unit = '', onChange }) {
+  const clamp = (n) => {
+    if (min != null && n < min) return min;
+    if (max != null && n > max) return max;
+    return n;
+  };
+  const startRef = React.useRef({ x: 0, val: 0 });
+  const onScrubStart = (e) => {
+    e.preventDefault();
+    startRef.current = { x: e.clientX, val: value };
+    const decimals = (String(step).split('.')[1] || '').length;
+    const move = (ev) => {
+      const dx = ev.clientX - startRef.current.x;
+      const raw = startRef.current.val + dx * step;
+      const snapped = Math.round(raw / step) * step;
+      onChange(clamp(Number(snapped.toFixed(decimals))));
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+  return (
+    <div className="twk-num">
+      <span className="twk-num-lbl" onPointerDown={onScrubStart}>{label}</span>
+      <input type="number" value={value} min={min} max={max} step={step}
+             onChange={(e) => onChange(clamp(Number(e.target.value)))} />
+      {unit && <span className="twk-num-unit">{unit}</span>}
+    </div>
+  );
+}
+
+function TweakColor({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <input type="color" className="twk-swatch" value={value}
+             onChange={(e) => onChange(e.target.value)} />
+    </div>
+  );
+}
+
+function TweakButton({ label, onClick, secondary = false }) {
+  return (
+    <button type="button" className={secondary ? 'twk-btn secondary' : 'twk-btn'}
+            onClick={onClick}>{label}</button>
+  );
+}
+
+Object.assign(window, {
+  useTweaks, TweaksPanel, TweakSection, TweakRow,
+  TweakSlider, TweakToggle, TweakRadio, TweakSelect,
+  TweakText, TweakNumber, TweakColor, TweakButton,
+});
+
+</script>
+<script type="text/babel">
+// Components for Te Lui Om Te Winnen onepager
+const { useState, useEffect, useRef } = React;
+
+// ----- Data -----
+const KALENDER = [
+{ d: "08", m: "MEI", quiz: "Quiztion", where: "Lommel", ploeg: ["Michiel", "Jorik", "Nore", "Baileyke", "Rik", "Rosalie"] },
+{ d: "15", m: "MEI", quiz: "Bruudruusterquiz", where: "Lommel", ploeg: ["Michiel", "Robin", "Jorik", "Jensie", "Baileyke", "Wouter"] },
+{ d: "18", m: "SEP", quiz: "Geknipte Lommelse Gazet Quiz", where: "Lommel", ploeg: ["Michiel", "?", "?", "?", "?", "?"] },
+{ d: "09", m: "OKT", quiz: "FC Vandenberken Quiz", where: "Lommel", ploeg: ["Michiel", "Bob", "Jorik", "Jensie", "Robin", "?"] },
+{ d: "30", m: "OKT", quiz: "Lovoc Quiz", where: "Lommel", ploeg: ["Michiel", "Bob", "Jorik", "Jensie", "Robin", "?"] }];
+
+
+const UITSLAGEN_2526 = [
+{ date: "24 APR 2026", quiz: "Die van os quiz", place: "Lommel", rank: 4, of: 39 },
+{ date: "17 APR 2026", quiz: "Mèndetquiz", place: "Lommel", rank: 5, of: 37, youthWin: true },
+{ date: "27 MRT 2026", quiz: "COE Quiz", place: "Lommel", rank: 4, of: 36 },
+{ date: "14 MRT 2026", quiz: "Klapkwis", place: "Lommel", rank: 4, of: 75 },
+{ date: "27 FEB 2026", quiz: "Leopoldquiz", place: "Lommel", rank: 7, of: 46 },
+{ date: "14 NOV 2025", quiz: "Lovoc Quiz", place: "Lommel", rank: 1, of: 36 },
+{ date: "10 OKT 2025", quiz: "FC Vandenberken Quiz", place: "Lommel", rank: 3, of: 42 },
+{ date: "19 SEP 2025", quiz: "Internetgazet Quiz", place: "Lommel", rank: 7, of: 33 },
+{ date: "14 AUG 2025", quiz: "Sporta Quiz", place: "Westerlo", rank: 6, of: 14 }];
+
+
+// Vorig seizoen — placeholders, gemarkeerd zodat user ze kan vervangen
+const UITSLAGEN_2425 = [
+{ date: "— 2025", quiz: "Archief 2024–2025", place: "Lommel", rank: "—", of: "—", placeholder: true }];
+
+
+const SEIZOENEN = {
+  "2025/26": UITSLAGEN_2526,
+  "2024/25": UITSLAGEN_2425
+};
+
+const LEDEN = [
+{ name: "Michiel", role: "De vaste waarde", bio: "Aanwezig op elke quiz sinds mensenheugenis. Houdt onbewust de naamgeving vol." },
+{ name: "Jorik", role: "Popcultuur & muziek", bio: "Herkent intro's binnen 0,4 seconden. Is daarna boos als de vraag iets anders blijkt." },
+{ name: "Bob", role: "Geschiedenis & politiek", bio: "Geeft het juiste antwoord op vragen die niemand gesteld heeft. Drinkt langzaam." },
+{ name: "Jensie", role: "Wetenschap & techniek", bio: "Twijfelt bij elk antwoord en heeft 9 op 10 keer gelijk. Ondergewaardeerd nationaal erfgoed." },
+{ name: "Robin", role: "Sport & algemeen", bio: "Schreeuwt antwoorden door. Soms goed. Soms heel niet. Levert sfeer in elk geval." },
+{ name: "Het 6e lid", role: "Roulerende stoel", bio: "Wisselend gevuld door Nore, Baileyke, Rik, Rosalie of Wouter. Brengt steevast een nieuw perspectief én één onverwacht juist antwoord." }];
+
+
+const MOTTOS = [
+{ q: "Wij zijn niet hier om te winnen. Wij zijn hier voor de borrelplank.", a: "Michiel, openingswoord" },
+{ q: "Een vierde plaats voelt eigenlijk beter dan een derde. Minder druk volgende keer.", a: "Bob, na FC Vandenberken" },
+{ q: "Hadden we maar wat sneller bij de bestelling moeten zijn.", a: "Elke quiz, ronde 3" },
+{ q: "We hebben gewonnen. Eén keer. Dat moet genoeg zijn voor een decennium.", a: "Lovoc, nov. 2025" }];
+
+
+// ----- Reveal hook -----
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll(".reveal, .reveal-stagger");
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add("in");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -60px 0px" });
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+}
+
+// ----- Scroll progress -----
+function ScrollProgress() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement;
+      const p = h.scrollTop / (h.scrollHeight - h.clientHeight);
+      if (ref.current) ref.current.style.transform = `scaleX(${p})`;
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  return <div className="scroll-prog" ref={ref}></div>;
+}
+
+// ----- Nav -----
+function Nav() {
+  const [stuck, setStuck] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [open, setOpen] = useState(false);
+  const lastY = useRef(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setStuck(y > 80);
+      // hide on scroll down past 200px, show on scroll up
+      if (y > 200 && y > lastY.current + 4) setHidden(true);
+      else if (y < lastY.current - 4) setHidden(false);
+      lastY.current = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  // Close drawer when a link is clicked
+  const close = () => setOpen(false);
+  // Lock scroll when drawer open
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+  return (
+    <>
+      <nav className={"nav " + (stuck ? "is-stuck " : "") + (hidden && !open ? "is-hidden" : "")}>
+        <a href="#top" className="nav-logo" onClick={close}>
+          <span style={{fontFamily:"var(--font-mono)",fontSize:"11px",letterSpacing:"0.12em",color:"var(--teal-ink)",opacity:0.9}}>Te Lui Om Te Winnen</span>
+        </a>
+        <div className="nav-links">
+          <a href="#over">Over ons</a>
+          <a href="#leuzen">Leuzen</a>
+          <a href="#uitslagen">Uitslagen</a>
+          <a href="#kalender">Kalender</a>
+          <a href="#leden">De ploeg</a>
+          <a href="#media">In de pers</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <button
+          className={"nav-burger " + (open ? "is-open" : "")}
+          onClick={() => setOpen((v) => !v)}
+          aria-label="Menu"
+          aria-expanded={open}>
+
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+      <div className={"nav-drawer " + (open ? "is-open" : "")} onClick={close}>
+        <div className="nav-drawer-inner" onClick={(e) => e.stopPropagation()}>
+          <a href="#over" onClick={close}>Over ons</a>
+          <a href="#leuzen" onClick={close}>Leuzen</a>
+          <a href="#uitslagen" onClick={close}>Uitslagen</a>
+          <a href="#kalender" onClick={close}>Kalender</a>
+          <a href="#leden" onClick={close}>De ploeg</a>
+          <a href="#media" onClick={close}>In de pers</a>
+          <a href="#contact" onClick={close}>Contact</a>
+        </div>
+      </div>
+    </>);
+
+}
+
+// ----- Hero -----
+function Hero() {
+  return (
+    <header className="hero">
+      <div className="shell">
+        <div className="hero-grid reveal-stagger">
+          <h1 className="hero-statement">
+            Te lui<br />om te <em>winnen.</em>
+          </h1>
+          <div className="hero-side">
+            <p className="hero-tagline">
+              Vijf vaste leden. Tien quizzen per jaar. Eén onuitgesproken pact: nooit te vroeg de borrelplank bestellen.
+            </p>
+            <div className="hero-quote">
+              "Als je niet wint, voelt elke vierde plaats nog vrij comfortabel."
+              <span className="hero-quote-attr">— ongeschreven huishoudelijk reglement</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="hero-ticker-wrap">
+        <div className="hero-ticker-label"><span className="dot"></span>Live ticker · seizoen '25/'26</div>
+        <div className="hero-ticker-track">
+          <div className="hero-ticker">
+            {Array.from({ length: 2 }).map((_, k) =>
+            <React.Fragment key={k}>
+                <span><b>14.08.25</b> Sporta Quiz <span className="pos">6/14</span></span><span className="sep">✦</span>
+                <span><b>19.09.25</b> Internetgazet Quiz <span className="pos">7/33</span></span><span className="sep">✦</span>
+                <span><b>10.10.25</b> FC Vandenberken <span className="pos">3/42</span></span><span className="sep">✦</span>
+                <span><b>14.11.25</b> Lovoc Quiz <span className="pos">1/36</span></span><span className="sep">✦</span>
+                <span><b>27.02.26</b> Leopoldquiz <span className="pos">7/46</span></span><span className="sep">✦</span>
+                <span><b>14.03.26</b> Klapkwis <span className="pos">4/75</span></span><span className="sep">✦</span>
+                <span><b>27.03.26</b> COE Quiz <span className="pos">4/36</span></span><span className="sep">✦</span>
+                <span><b>17.04.26</b> Mèndetquiz <span className="pos">5/37 ★</span></span><span className="sep">✦</span>
+                <span><b>24.04.26</b> Die van os <span className="pos">4/39</span></span><span className="sep">✦</span>
+                <span><b>Volgende</b> 08.05.26 Quiztion</span><span className="sep">✦</span>
+              </React.Fragment>
+            )}
+          </div>
+        </div>
+        <div className="hero-ticker-side">9 gekwist · 1 zege</div>
+      </div>
+    </header>);
+
+}
+
+// ----- About -----
+function About() {
+  return (
+    <section className="section" id="over">
+      <div className="shell">
+        <div className="section-head reveal">
+          <div className="meta">
+            <div className="section-num">Over ons</div>
+          </div>
+          <h2>Een quizploeg met <em>verdacht weinig</em> ambitie.</h2>
+        </div>
+        <div className="about reveal-stagger">
+          <div>
+            <p className="about-lead">
+              Wij zijn <em>Te Lui Om Te Winnen.</em> Een vijftal vaste leden uit Lommel die al ongeveer tien jaar quizzen en zich onderscheiden door een opvallende specialiteit: borrelplanken bestellen op het moment dat ze net uitverkocht zijn.
+            </p>
+            <div className="about-body">
+              <p>
+                We doen mee aan zo'n tien quizzen per jaar in en rond Lommel. Onze sterke vakgebieden? Daar zijn we zelf nog niet uit. Onze zwakke vakgebieden? Onbekend, maar legio.
+              </p>
+              <p>
+                We zijn niet de luidste ploeg. Niet de strakste. Niet de snelste met het opheffen van de hand. Maar als de jury de laatste kruisjes zet en wij eindigen ergens tussen plek 4 en 7 — dan was het een goede avond.
+              </p>
+              <p>
+                We hebben één keer gewonnen. Dat blijft voorlopig genoeg.
+              </p>
+            </div>
+          </div>
+          <div className="about-stats-wrap">
+            <div className="about-stats">
+            <div className="stat">
+              <div className="num">±10</div>
+              <span className="lab">Quizzen / jaar</span>
+            </div>
+            <div className="stat">
+              <div className="num">5</div>
+              <span className="lab">Vaste leden</span>
+            </div>
+            <div className="stat">
+              <div className="num"><em>1</em></div>
+              <span className="lab">Officiële zege</span>
+            </div>
+            <div className="stat">
+              <div className="num">∞</div>
+              <span className="lab">Uitverkochte planken</span>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </section>);
+
+}
+
+// ----- Mottos -----
+function Mottos() {
+  return (
+    <section className="mottos" id="leuzen">
+      <div className="shell">
+        <div className="section-head reveal" style={{ borderColor: "var(--panel-rule)" }}>
+          <div className="meta">
+            <div className="section-num" style={{ color: "var(--orange)", opacity: 1 }}>Leuzen</div>
+          </div>
+          <h2 style={{ color: "var(--panel-fg)" }}>Onuitgesproken <em>regels</em>, <br/>luidop herhaald.</h2>
+        </div>
+        <div className="motto-list reveal-stagger">
+          {MOTTOS.map((m, i) =>
+          <div className="motto" key={i}>
+              <div className="n">{String(i + 1).padStart(2, "0")}</div>
+              <div className="q">"{m.q}"</div>
+              <div className="a">{m.a}</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>);
+
+}
+
+// ----- Kalender -----
+function Kalender() {
+  return (
+    <section className="section" id="kalender">
+      <div className="shell">
+        <div className="section-head reveal">
+          <div className="meta">
+            <div className="section-num">Kalender 2026</div>
+          </div>
+          <h2>Wat staat er <em>nog</em> op de planning.</h2>
+        </div>
+        <div className="kalender-list reveal-stagger">
+          {KALENDER.map((k, i) =>
+          <div className="kal-row" key={i}>
+              <div className="kal-date">
+                <div className="date-d">{k.d}</div>
+                <span className="date-m">{k.m} '26</span>
+              </div>
+              <div className="kal-main">
+                <div className="name">{k.quiz}</div>
+                <div className="ploeg">
+                  {k.ploeg.map((p, idx) =>
+                <React.Fragment key={idx}>
+                      {idx > 0 && " · "}
+                      {p === "?" ? <span className="qmark">?</span> : p}
+                    </React.Fragment>
+                )}
+                </div>
+              </div>
+              <div className="where">{k.where}</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>);
+
+}
+
+// ----- Uitslagen -----
+function Uitslagen() {
+  const [season, setSeason] = useState("2025/26");
+  const rows = SEIZOENEN[season];
+  const numericRows = rows.filter((r) => typeof r.rank === "number");
+  const podiums = numericRows.filter((u) => u.rank <= 3).length;
+  const top5 = numericRows.filter((u) => u.rank <= 5).length;
+  const best = numericRows.length ? numericRows.reduce((a, b) => a.rank < b.rank ? a : b) : null;
+  const avg = numericRows.length ? (numericRows.reduce((s, u) => s + u.rank, 0) / numericRows.length).toFixed(1) : "—";
+  return (
+    <section className="section" id="uitslagen" style={{ background: "var(--bone)" }}>
+      <div className="shell">
+        <div className="section-head reveal">
+          <div className="meta">
+            <div className="section-num">Palmares</div>
+          </div>
+          <h2>De koude, harde, <em>bescheiden</em> cijfers.</h2>
+        </div>
+        <div className="reveal season-tabs-wrap">
+          <div className="season-tabs-scroll">
+            <div className="season-tabs" role="tablist">
+              {Object.keys(SEIZOENEN).map((s) =>
+              <button key={s} className={"season-tab " + (s === season ? "active" : "")} onClick={() => setSeason(s)}>
+                  Seizoen {s}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="uit-wrap">
+          <table className="uit-table reveal">
+            <thead>
+              <tr>
+                <th>Datum</th>
+                <th>Quiz</th>
+                <th>Plaats</th>
+                <th style={{ textAlign: "right" }}>Eindstand</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((u, i) =>
+              <tr key={i} className={u.rank === 1 || u.rank === 2 || u.rank === 3 ? "podium" : ""}>
+                  <td className="date">{u.date}</td>
+                  <td><span className="quiz-name">{u.quiz}</span></td>
+                  <td className="place">{u.place}</td>
+                  <td className="pos">
+                    <span className="rank">{u.rank}</span>
+                    <span className="of"> / {u.of}</span>
+                  </td>
+                </tr>
+              )}
+              {rows[0].placeholder &&
+              <tr>
+                  <td colSpan={4} style={{ padding: "40px 0", fontFamily: "var(--font-display)", fontStyle: "italic", color: "var(--teal-deep)", fontSize: "18px", textAlign: "center" }}>
+                    Archief van vorig seizoen wordt later aangevuld.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+          <aside className="uit-side reveal">
+            <span className="label">Seizoen {season}</span>
+            {best ?
+            <>
+                <div className="big"><em>{best.rank}</em><span style={{ fontSize: "36px" }}>e</span> </div>
+                <span className="small">Beste prestatie · {best.quiz}</span>
+              </> :
+
+            <div className="big" style={{ fontSize: "40px" }}>—</div>
+            }
+            <div className="divider"></div>
+            <div className="row"><span>Aantal quizzen</span><span className="v">{numericRows.length || "—"}</span></div>
+            <div className="row"><span>Podiumplaatsen</span><span className="v">{best ? podiums : "—"}</span></div>
+            <div className="row"><span>Top-5 noteringen</span><span className="v">{best ? top5 : "—"}</span></div>
+            <div className="row"><span>Gemiddelde stand</span><span className="v">{avg}</span></div>
+            <div className="divider"></div>
+            <div style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: "15px", lineHeight: 1.4, color: "var(--teal-deep)" }}>
+              ★ Mèndetquiz: <strong style={{ fontStyle: "normal" }}>beste jongerenploeg</strong>. De enige titel die we dit seizoen écht verdiend hebben.
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>);
+
+}
+
+// ----- Leden -----
+function Leden() {
+  return (
+    <section className="section" id="leden">
+      <div className="shell">
+        <div className="section-head reveal">
+          <div className="meta">
+            <div className="section-num">De ploeg</div>
+          </div>
+          <h2>Zes mensen. <em>Eén</em> tafel.</h2>
+        </div>
+        <div className="leden-grid reveal-stagger">
+          {LEDEN.map((l, i) =>
+          <div className="lid" key={i}>
+              <div className="num">№ {String(i + 1).padStart(2, "0")} / 06</div>
+              <div className="portrait"></div>
+              <div className="name">{l.name}</div>
+              <div className="role">{l.role}</div>
+              <div className="bio">{l.bio}</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>);
+
+}
+
+// ----- Media -----
+function Media() {
+  return (
+    <section className="section" id="media" style={{ background: "var(--bone)" }}>
+      <div className="shell">
+        <div className="section-head reveal">
+          <div className="meta">
+            <div className="section-num">In de pers</div>
+          </div>
+          <h2>Vermeld in <em>De Lommelse Gazet.</em></h2>
+        </div>
+        <div className="media-grid reveal-stagger">
+          <article className="clip span-7">
+            <div className="clip-thumb"></div>
+            <div className="clip-meta">
+              <span>DE LOMMELSE GAZET</span>
+              <span>15.11.2025</span>
+            </div>
+            <h3 className="clip-headline">"Te Lui Om Te Winnen" wint dan toch <em>één keer</em></h3>
+            <p className="clip-quote">"Niemand was meer verbaasd dan zijzelf, getuige de stille reactie aan tafel 7."</p>
+          </article>
+          <article className="clip span-5">
+            <div className="clip-thumb"></div>
+            <div className="clip-meta">
+              <span>DE LOMMELSE GAZET</span>
+              <span>11.10.2025</span>
+            </div>
+            <h3 className="clip-headline">Lokale ploeg <em>derde</em> bij FC Vandenberken</h3>
+            <p className="clip-quote">"Een knap resultaat, mits de borrelplank vooraf besteld."</p>
+          </article>
+          <article className="clip span-6">
+            <div className="clip-thumb"></div>
+            <div className="clip-meta">
+              <span>DE LOMMELSE GAZET</span>
+              <span>15.03.2026</span>
+            </div>
+            <h3 className="clip-headline">Klapkwis kent <em>verrassende</em> top tien</h3>
+            <p className="clip-quote">"Met 75 ploegen aan de start wordt vier op vier en zeventig opnieuw bewezen knap."</p>
+          </article>
+          <article className="clip span-6">
+            <div className="clip-thumb"></div>
+            <div className="clip-meta">
+              <span>DE LOMMELSE GAZET</span>
+              <span>18.04.2026</span>
+            </div>
+            <h3 className="clip-headline">Mèndetquiz: <em>discussie</em> over één antwoord</h3>
+            <p className="clip-quote">"De ploeg gaf na afloop 'geen verdere commentaar' en bestelde een plank."</p>
+          </article>
+        </div>
+        <div style={{ marginTop: "60px", textAlign: "center", fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.08em", color: "var(--teal-deep)", opacity: 0.7 }}>
+          — Volledige knipsels op aanvraag —
+        </div>
+      </div>
+    </section>);
+
+}
+
+// ----- Contact -----
+function Contact() {
+  const [sent, setSent] = useState(false);
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setSent(true);
+  };
+  return (
+    <section className="contact" id="contact">
+      <div className="shell">
+        <div className="reveal">
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.18em", color: "var(--orange)", marginBottom: "32px" }}>Contact
+
+          </div>
+          <h2 className="contact-h">
+            Quiz te <em>verdedigen?</em><br />
+            We denken erover na.
+          </h2>
+          <div className="contact-meta reveal-stagger" style={{ marginTop: "40px" }}>
+            <div className="row">
+              <span className="k">EMAIL</span>
+              <span className="v"><a href="mailto:info@teluiomtewinnen.be" style={{ textDecoration: "none" }}>info@teluiomtewinnen.be</a></span>
+            </div>
+            <div className="row">
+              <span className="k">BASIS</span>
+              <span className="v">Lommel, België</span>
+            </div>
+            <div className="row">
+              <span className="k">VOORWAARDE</span>
+              <span className="v">Borrelplank verzekerd</span>
+            </div>
+          </div>
+        </div>
+        <div className="reveal">
+          {sent ?
+          <div className="cf-thanks">
+              Bericht <em>verzonden.</em><br />
+              We laten van ons horen — vermoedelijk net na de borrelplank.
+            </div> :
+
+          <form className="contact-form" onSubmit={onSubmit}>
+              <div className="cf-row">
+                <div className="cf-field">
+                  <label htmlFor="cf-name">Jouw naam</label>
+                  <input id="cf-name" type="text" required placeholder="Voornaam Achternaam" />
+                </div>
+                <div className="cf-field">
+                  <label htmlFor="cf-email">E-mail</label>
+                  <input id="cf-email" type="email" required placeholder="jij@voorbeeld.be" />
+                </div>
+              </div>
+              <div className="cf-field">
+                <label htmlFor="cf-onderwerp">Onderwerp</label>
+                <select id="cf-onderwerp" defaultValue="" required>
+                  <option value="" disabled>Kies een reden</option>
+                  <option>Uitnodiging voor een quiz</option>
+                  <option>Persvraag · De Lommelse Gazet</option>
+                  <option>Sponsoring (lees: borrelplanken)</option>
+                  <option>Iets anders</option>
+                </select>
+              </div>
+              <div className="cf-field">
+                <label htmlFor="cf-bericht">Bericht</label>
+                <textarea id="cf-bericht" required placeholder="Datum, locatie, en — belangrijk — of er borrelplanken voorzien zijn."></textarea>
+              </div>
+              <button type="submit" className="cf-submit">Verzenden →</button>
+            </form>
+          }
+        </div>
+      </div>
+    </section>);
+
+}
+
+// ----- Footer -----
+function Footer() {
+  return (
+    <footer className="footer">
+      <div className="shell">
+        <div>© {new Date().getFullYear()} Te Lui Om Te Winnen · Lommel</div>
+        <div>Sinds ± 2016 · één zege bevestigd</div>
+        <div>info@teluiomtewinnen.be</div>
+      </div>
+    </footer>);
+
+}
+
+Object.assign(window, {
+  ScrollProgress, Nav, Hero, About, Mottos, Kalender, Uitslagen, Leden, Media, Contact, Footer, useReveal
+});
+</script>
+<script type="text/babel">
+
+const { useEffect: useEffectApp } = React;
+
+function App() {
+  useReveal();
+  return (
+    <>
+      <ScrollProgress />
+      <Nav />
+      <Hero />
+      <About />
+      <Mottos />
+      <Uitslagen />
+      <Kalender />
+      <Leden />
+      <Media />
+      <Contact />
+      <Footer />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+</script>
+</body>
+</html>
