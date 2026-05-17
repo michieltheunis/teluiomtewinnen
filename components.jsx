@@ -399,7 +399,7 @@ function Media({ media = [] }) {
 }
 
 // ----- Contact -----
-const FORMSPREE = "https://formspree.io/f/xpwzqboj"; // vervang door jouw endpoint van formspree.io
+const FORMSPREE = "https://formspree.io/f/xpqnabpq";
 
 function Contact() {
   const [sent, setSent] = useState(false);
