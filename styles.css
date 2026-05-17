@@ -625,6 +625,14 @@ body[data-mode="dark"] .nav-drawer-inner a { color: var(--panel-fg); border-bott
   font-weight: 400;
   letter-spacing: -0.01em;
 }
+.uit-table .quiz-place {
+  display: none;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+  color: var(--teal-deep);
+  margin-top: 3px;
+}
 .uit-table .date {
   color: var(--teal-deep);
   letter-spacing: 0.06em;
@@ -1303,6 +1311,7 @@ body[data-mode="dark"] .uit-side { background: #1A2321; }
   .uit-table .quiz-name { font-size: 15px; }
   .uit-table thead th { font-size: 11px; }
   .uit-table thead th:nth-child(3), .uit-table tbody td:nth-child(3) { display: none; }
+  .uit-table .quiz-place { display: block; }
   .uit-side { padding: 28px 22px; position: static; }
   .uit-side .big { font-size: 80px; }
   .clip-headline { font-size: 22px; }

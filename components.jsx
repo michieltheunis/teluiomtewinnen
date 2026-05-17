@@ -293,7 +293,10 @@ function Uitslagen({ uitslagen = {} }) {
               {rows.map((u, i) =>
                 <tr key={i} className={u.rank === 1 || u.rank === 2 || u.rank === 3 ? "podium" : ""}>
                   <td className="date">{u.date}</td>
-                  <td><span className="quiz-name">{u.quiz}</span></td>
+                  <td>
+                    <span className="quiz-name">{u.quiz}</span>
+                    <span className="quiz-place">{u.place}</span>
+                  </td>
                   <td className="place">{u.place}</td>
                   <td className="pos">
                     <span className="rank">{u.rank}</span>
