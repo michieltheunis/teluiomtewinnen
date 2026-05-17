@@ -1,53 +1,6 @@
 // Components for Te Lui Om Te Winnen onepager
 const { useState, useEffect, useRef } = React;
 
-// ----- Data -----
-const KALENDER = [
-{ d: "08", m: "MEI", quiz: "Quiztion", where: "Lommel", ploeg: ["Michiel", "Jorik", "Nore", "Baileyke", "Rik", "Rosalie"] },
-{ d: "15", m: "MEI", quiz: "Bruudruusterquiz", where: "Lommel", ploeg: ["Michiel", "Robin", "Jorik", "Jensie", "Baileyke", "Wouter"] },
-{ d: "18", m: "SEP", quiz: "Geknipte Lommelse Gazet Quiz", where: "Lommel", ploeg: ["Michiel", "?", "?", "?", "?", "?"] },
-{ d: "09", m: "OKT", quiz: "FC Vandenberken Quiz", where: "Lommel", ploeg: ["Michiel", "Bob", "Jorik", "Jensie", "Robin", "?"] },
-{ d: "30", m: "OKT", quiz: "Lovoc Quiz", where: "Lommel", ploeg: ["Michiel", "Bob", "Jorik", "Jensie", "Robin", "?"] }];
-
-
-const UITSLAGEN_2526 = [
-{ date: "24 APR 2026", quiz: "Die van os quiz", place: "Lommel", rank: 4, of: 39 },
-{ date: "17 APR 2026", quiz: "Mèndetquiz", place: "Lommel", rank: 5, of: 37, youthWin: true },
-{ date: "27 MRT 2026", quiz: "COE Quiz", place: "Lommel", rank: 4, of: 36 },
-{ date: "14 MRT 2026", quiz: "Klapkwis", place: "Lommel", rank: 4, of: 75 },
-{ date: "27 FEB 2026", quiz: "Leopoldquiz", place: "Lommel", rank: 7, of: 46 },
-{ date: "14 NOV 2025", quiz: "Lovoc Quiz", place: "Lommel", rank: 1, of: 36 },
-{ date: "10 OKT 2025", quiz: "FC Vandenberken Quiz", place: "Lommel", rank: 3, of: 42 },
-{ date: "19 SEP 2025", quiz: "Internetgazet Quiz", place: "Lommel", rank: 7, of: 33 },
-{ date: "14 AUG 2025", quiz: "Sporta Quiz", place: "Westerlo", rank: 6, of: 14 }];
-
-
-// Vorig seizoen — placeholders, gemarkeerd zodat user ze kan vervangen
-const UITSLAGEN_2425 = [
-{ date: "— 2025", quiz: "Archief 2024–2025", place: "Lommel", rank: "—", of: "—", placeholder: true }];
-
-
-const SEIZOENEN = {
-  "2025/26": UITSLAGEN_2526,
-  "2024/25": UITSLAGEN_2425
-};
-
-const LEDEN = [
-{ name: "Michiel", role: "De vaste waarde", bio: "Aanwezig op elke quiz sinds mensenheugenis. Houdt onbewust de naamgeving vol." },
-{ name: "Jorik", role: "Popcultuur & muziek", bio: "Herkent intro's binnen 0,4 seconden. Is daarna boos als de vraag iets anders blijkt." },
-{ name: "Bob", role: "Geschiedenis & politiek", bio: "Geeft het juiste antwoord op vragen die niemand gesteld heeft. Drinkt langzaam." },
-{ name: "Jensie", role: "Wetenschap & techniek", bio: "Twijfelt bij elk antwoord en heeft 9 op 10 keer gelijk. Ondergewaardeerd nationaal erfgoed." },
-{ name: "Robin", role: "Sport & algemeen", bio: "Schreeuwt antwoorden door. Soms goed. Soms heel niet. Levert sfeer in elk geval." },
-{ name: "Het 6e lid", role: "Roulerende stoel", bio: "Wisselend gevuld door Nore, Baileyke, Rik, Rosalie of Wouter. Brengt steevast een nieuw perspectief én één onverwacht juist antwoord." }];
-
-
-const MOTTOS = [
-{ q: "Wij zijn niet hier om te winnen. Wij zijn hier voor de borrelplank.", a: "Michiel, openingswoord" },
-{ q: "Een vierde plaats voelt eigenlijk beter dan een derde. Minder druk volgende keer.", a: "Bob, na FC Vandenberken" },
-{ q: "Hadden we maar wat sneller bij de bestelling moeten zijn.", a: "Elke quiz, ronde 3" },
-{ q: "We hebben gewonnen. Eén keer. Dat moet genoeg zijn voor een decennium.", a: "Lovoc, nov. 2025" }];
-
-
 // ----- Reveal hook -----
 function useReveal() {
   useEffect(() => {
@@ -91,7 +44,6 @@ function Nav() {
     const onScroll = () => {
       const y = window.scrollY;
       setStuck(y > 80);
-      // hide on scroll down past 200px, show on scroll up
       if (y > 200 && y > lastY.current + 4) setHidden(true);
       else if (y < lastY.current - 4) setHidden(false);
       lastY.current = y;
@@ -99,9 +51,7 @@ function Nav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-  // Close drawer when a link is clicked
   const close = () => setOpen(false);
-  // Lock scroll when drawer open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -126,7 +76,6 @@ function Nav() {
           onClick={() => setOpen((v) => !v)}
           aria-label="Menu"
           aria-expanded={open}>
-
           <span></span>
           <span></span>
           <span></span>
@@ -144,11 +93,16 @@ function Nav() {
         </div>
       </div>
     </>);
-
 }
 
 // ----- Hero -----
-function Hero() {
+function Hero({ uitslagen, kalender }) {
+  const seizoen = uitslagen ? Object.keys(uitslagen)[0] : null;
+  const rows = seizoen ? (uitslagen[seizoen] || []).filter(r => !r.placeholder) : [];
+  const volgende = kalender && kalender[0];
+  const totalGekwist = rows.length;
+  const zeges = rows.filter(r => r.rank === 1).length;
+
   return (
     <header className="hero">
       <div className="shell">
@@ -172,25 +126,21 @@ function Hero() {
         <div className="hero-ticker-track">
           <div className="hero-ticker">
             {Array.from({ length: 2 }).map((_, k) =>
-            <React.Fragment key={k}>
-                <span><b>14.08.25</b> Sporta Quiz <span className="pos">6/14</span></span><span className="sep">✦</span>
-                <span><b>19.09.25</b> Internetgazet Quiz <span className="pos">7/33</span></span><span className="sep">✦</span>
-                <span><b>10.10.25</b> FC Vandenberken <span className="pos">3/42</span></span><span className="sep">✦</span>
-                <span><b>14.11.25</b> Lovoc Quiz <span className="pos">1/36</span></span><span className="sep">✦</span>
-                <span><b>27.02.26</b> Leopoldquiz <span className="pos">7/46</span></span><span className="sep">✦</span>
-                <span><b>14.03.26</b> Klapkwis <span className="pos">4/75</span></span><span className="sep">✦</span>
-                <span><b>27.03.26</b> COE Quiz <span className="pos">4/36</span></span><span className="sep">✦</span>
-                <span><b>17.04.26</b> Mèndetquiz <span className="pos">5/37 ★</span></span><span className="sep">✦</span>
-                <span><b>24.04.26</b> Die van os <span className="pos">4/39</span></span><span className="sep">✦</span>
-                <span><b>Volgende</b> 08.05.26 Quiztion</span><span className="sep">✦</span>
+              <React.Fragment key={k}>
+                {rows.slice().reverse().map((r, i) =>
+                  <React.Fragment key={i}>
+                    <span><b>{r.date}</b> {r.quiz} <span className="pos">{r.rank}/{r.of}</span></span>
+                    <span className="sep">✦</span>
+                  </React.Fragment>
+                )}
+                {volgende && <><span><b>Volgende</b> {volgende.d} {volgende.m} · {volgende.quiz}</span><span className="sep">✦</span></>}
               </React.Fragment>
             )}
           </div>
         </div>
-        <div className="hero-ticker-side">9 gekwist · 1 zege</div>
+        <div className="hero-ticker-side">{totalGekwist} gekwist · {zeges} zege{zeges !== 1 ? "n" : ""}</div>
       </div>
     </header>);
-
 }
 
 // ----- About -----
@@ -210,45 +160,26 @@ function About() {
               Wij zijn <em>Te Lui Om Te Winnen.</em> Een vijftal vaste leden uit Lommel die al ongeveer tien jaar quizzen en zich onderscheiden door een opvallende specialiteit: borrelplanken bestellen op het moment dat ze net uitverkocht zijn.
             </p>
             <div className="about-body">
-              <p>
-                We doen mee aan zo'n tien quizzen per jaar in en rond Lommel. Onze sterke vakgebieden? Daar zijn we zelf nog niet uit. Onze zwakke vakgebieden? Onbekend, maar legio.
-              </p>
-              <p>
-                We zijn niet de luidste ploeg. Niet de strakste. Niet de snelste met het opheffen van de hand. Maar als de jury de laatste kruisjes zet en wij eindigen ergens tussen plek 4 en 7 — dan was het een goede avond.
-              </p>
-              <p>
-                We hebben één keer gewonnen. Dat blijft voorlopig genoeg.
-              </p>
+              <p>We doen mee aan zo'n tien quizzen per jaar in en rond Lommel. Onze sterke vakgebieden? Daar zijn we zelf nog niet uit. Onze zwakke vakgebieden? Onbekend, maar legio.</p>
+              <p>We zijn niet de luidste ploeg. Niet de strakste. Niet de snelste met het opheffen van de hand. Maar als de jury de laatste kruisjes zet en wij eindigen ergens tussen plek 4 en 7 — dan was het een goede avond.</p>
+              <p>We hebben één keer gewonnen. Dat blijft voorlopig genoeg.</p>
             </div>
           </div>
           <div className="about-stats-wrap">
             <div className="about-stats">
-            <div className="stat">
-              <div className="num">±10</div>
-              <span className="lab">Quizzen / jaar</span>
+              <div className="stat"><div className="num">±10</div><span className="lab">Quizzen / jaar</span></div>
+              <div className="stat"><div className="num">5</div><span className="lab">Vaste leden</span></div>
+              <div className="stat"><div className="num"><em>1</em></div><span className="lab">Officiële zege</span></div>
+              <div className="stat"><div className="num">∞</div><span className="lab">Uitverkochte planken</span></div>
             </div>
-            <div className="stat">
-              <div className="num">5</div>
-              <span className="lab">Vaste leden</span>
-            </div>
-            <div className="stat">
-              <div className="num"><em>1</em></div>
-              <span className="lab">Officiële zege</span>
-            </div>
-            <div className="stat">
-              <div className="num">∞</div>
-              <span className="lab">Uitverkochte planken</span>
-            </div>
-          </div>
           </div>
         </div>
       </div>
     </section>);
-
 }
 
 // ----- Mottos -----
-function Mottos() {
+function Mottos({ mottos = [] }) {
   return (
     <section className="mottos" id="leuzen">
       <div className="shell">
@@ -259,8 +190,8 @@ function Mottos() {
           <h2 style={{ color: "var(--panel-fg)" }}>Onuitgesproken <em>regels</em>, <br/>luidop herhaald.</h2>
         </div>
         <div className="motto-list reveal-stagger">
-          {MOTTOS.map((m, i) =>
-          <div className="motto" key={i}>
+          {mottos.map((m, i) =>
+            <div className="motto" key={i}>
               <div className="n">{String(i + 1).padStart(2, "0")}</div>
               <div className="q">"{m.q}"</div>
               <div className="a">{m.a}</div>
@@ -269,11 +200,10 @@ function Mottos() {
         </div>
       </div>
     </section>);
-
 }
 
 // ----- Kalender -----
-function Kalender() {
+function Kalender({ kalender = [] }) {
   return (
     <section className="section" id="kalender">
       <div className="shell">
@@ -284,8 +214,8 @@ function Kalender() {
           <h2>Wat staat er <em>nog</em> op de planning.</h2>
         </div>
         <div className="kalender-list reveal-stagger">
-          {KALENDER.map((k, i) =>
-          <div className="kal-row" key={i}>
+          {kalender.map((k, i) =>
+            <div className="kal-row" key={i}>
               <div className="kal-date">
                 <div className="date-d">{k.d}</div>
                 <span className="date-m">{k.m} '26</span>
@@ -293,12 +223,12 @@ function Kalender() {
               <div className="kal-main">
                 <div className="name">{k.quiz}</div>
                 <div className="ploeg">
-                  {k.ploeg.map((p, idx) =>
-                <React.Fragment key={idx}>
+                  {(k.ploeg || []).map((p, idx) =>
+                    <React.Fragment key={idx}>
                       {idx > 0 && " · "}
                       {p === "?" ? <span className="qmark">?</span> : p}
                     </React.Fragment>
-                )}
+                  )}
                 </div>
               </div>
               <div className="where">{k.where}</div>
@@ -307,18 +237,23 @@ function Kalender() {
         </div>
       </div>
     </section>);
-
 }
 
 // ----- Uitslagen -----
-function Uitslagen() {
-  const [season, setSeason] = useState("2025/26");
-  const rows = SEIZOENEN[season];
+function Uitslagen({ uitslagen = {} }) {
+  const seasons = Object.keys(uitslagen);
+  const [season, setSeason] = useState(seasons[0] || "2025/26");
+  const rows = uitslagen[season] || [];
   const numericRows = rows.filter((r) => typeof r.rank === "number");
   const podiums = numericRows.filter((u) => u.rank <= 3).length;
   const top5 = numericRows.filter((u) => u.rank <= 5).length;
   const best = numericRows.length ? numericRows.reduce((a, b) => a.rank < b.rank ? a : b) : null;
   const avg = numericRows.length ? (numericRows.reduce((s, u) => s + u.rank, 0) / numericRows.length).toFixed(1) : "—";
+
+  useEffect(() => {
+    if (seasons.length && !uitslagen[season]) setSeason(seasons[0]);
+  }, [uitslagen]);
+
   return (
     <section className="section" id="uitslagen" style={{ background: "var(--bone)" }}>
       <div className="shell">
@@ -331,8 +266,8 @@ function Uitslagen() {
         <div className="reveal season-tabs-wrap">
           <div className="season-tabs-scroll">
             <div className="season-tabs" role="tablist">
-              {Object.keys(SEIZOENEN).map((s) =>
-              <button key={s} className={"season-tab " + (s === season ? "active" : "")} onClick={() => setSeason(s)}>
+              {seasons.map((s) =>
+                <button key={s} className={"season-tab " + (s === season ? "active" : "")} onClick={() => setSeason(s)}>
                   Seizoen {s}
                 </button>
               )}
@@ -351,7 +286,7 @@ function Uitslagen() {
             </thead>
             <tbody>
               {rows.map((u, i) =>
-              <tr key={i} className={u.rank === 1 || u.rank === 2 || u.rank === 3 ? "podium" : ""}>
+                <tr key={i} className={u.rank === 1 || u.rank === 2 || u.rank === 3 ? "podium" : ""}>
                   <td className="date">{u.date}</td>
                   <td><span className="quiz-name">{u.quiz}</span></td>
                   <td className="place">{u.place}</td>
@@ -361,8 +296,8 @@ function Uitslagen() {
                   </td>
                 </tr>
               )}
-              {rows[0].placeholder &&
-              <tr>
+              {rows[0] && rows[0].placeholder &&
+                <tr>
                   <td colSpan={4} style={{ padding: "40px 0", fontFamily: "var(--font-display)", fontStyle: "italic", color: "var(--teal-deep)", fontSize: "18px", textAlign: "center" }}>
                     Archief van vorig seizoen wordt later aangevuld.
                   </td>
@@ -373,12 +308,11 @@ function Uitslagen() {
           <aside className="uit-side reveal">
             <span className="label">Seizoen {season}</span>
             {best ?
-            <>
-                <div className="big"><em>{best.rank}</em><span style={{ fontSize: "36px" }}>e</span> </div>
+              <>
+                <div className="big"><em>{best.rank}</em><span style={{ fontSize: "36px" }}>e</span></div>
                 <span className="small">Beste prestatie · {best.quiz}</span>
               </> :
-
-            <div className="big" style={{ fontSize: "40px" }}>—</div>
+              <div className="big" style={{ fontSize: "40px" }}>—</div>
             }
             <div className="divider"></div>
             <div className="row"><span>Aantal quizzen</span><span className="v">{numericRows.length || "—"}</span></div>
@@ -393,11 +327,10 @@ function Uitslagen() {
         </div>
       </div>
     </section>);
-
 }
 
 // ----- Leden -----
-function Leden() {
+function Leden({ leden = [] }) {
   return (
     <section className="section" id="leden">
       <div className="shell">
@@ -408,10 +341,14 @@ function Leden() {
           <h2>Zes mensen. <em>Eén</em> tafel.</h2>
         </div>
         <div className="leden-grid reveal-stagger">
-          {LEDEN.map((l, i) =>
-          <div className="lid" key={i}>
-              <div className="num">№ {String(i + 1).padStart(2, "0")} / 06</div>
-              <div className="portrait"></div>
+          {leden.map((l, i) =>
+            <div className="lid" key={i}>
+              <div className="num">№ {String(i + 1).padStart(2, "0")} / {String(leden.length).padStart(2, "0")}</div>
+              <div className="portrait">
+                {l.photo
+                  ? <img src={l.photo} alt={l.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  : null}
+              </div>
               <div className="name">{l.name}</div>
               <div className="role">{l.role}</div>
               <div className="bio">{l.bio}</div>
@@ -420,11 +357,11 @@ function Leden() {
         </div>
       </div>
     </section>);
-
 }
 
 // ----- Media -----
-function Media() {
+function Media({ media = [] }) {
+  const spans = ["span-7", "span-5", "span-6", "span-6"];
   return (
     <section className="section" id="media" style={{ background: "var(--bone)" }}>
       <div className="shell">
@@ -435,49 +372,25 @@ function Media() {
           <h2>Vermeld in <em>De Lommelse Gazet.</em></h2>
         </div>
         <div className="media-grid reveal-stagger">
-          <article className="clip span-7">
-            <div className="clip-thumb"></div>
-            <div className="clip-meta">
-              <span>DE LOMMELSE GAZET</span>
-              <span>15.11.2025</span>
-            </div>
-            <h3 className="clip-headline">"Te Lui Om Te Winnen" wint dan toch <em>één keer</em></h3>
-            <p className="clip-quote">"Niemand was meer verbaasd dan zijzelf, getuige de stille reactie aan tafel 7."</p>
-          </article>
-          <article className="clip span-5">
-            <div className="clip-thumb"></div>
-            <div className="clip-meta">
-              <span>DE LOMMELSE GAZET</span>
-              <span>11.10.2025</span>
-            </div>
-            <h3 className="clip-headline">Lokale ploeg <em>derde</em> bij FC Vandenberken</h3>
-            <p className="clip-quote">"Een knap resultaat, mits de borrelplank vooraf besteld."</p>
-          </article>
-          <article className="clip span-6">
-            <div className="clip-thumb"></div>
-            <div className="clip-meta">
-              <span>DE LOMMELSE GAZET</span>
-              <span>15.03.2026</span>
-            </div>
-            <h3 className="clip-headline">Klapkwis kent <em>verrassende</em> top tien</h3>
-            <p className="clip-quote">"Met 75 ploegen aan de start wordt vier op vier en zeventig opnieuw bewezen knap."</p>
-          </article>
-          <article className="clip span-6">
-            <div className="clip-thumb"></div>
-            <div className="clip-meta">
-              <span>DE LOMMELSE GAZET</span>
-              <span>18.04.2026</span>
-            </div>
-            <h3 className="clip-headline">Mèndetquiz: <em>discussie</em> over één antwoord</h3>
-            <p className="clip-quote">"De ploeg gaf na afloop 'geen verdere commentaar' en bestelde een plank."</p>
-          </article>
+          {media.map((clip, i) =>
+            <article className={"clip " + (spans[i] || "span-6")} key={i}>
+              <div className="clip-thumb">
+                {clip.foto && <img src={clip.foto} alt={clip.titel} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />}
+              </div>
+              <div className="clip-meta">
+                <span>{clip.bron}</span>
+                <span>{clip.datum}</span>
+              </div>
+              <h3 className="clip-headline">{clip.titel}</h3>
+              <p className="clip-quote">"{clip.quote}"</p>
+            </article>
+          )}
         </div>
         <div style={{ marginTop: "60px", textAlign: "center", fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.08em", color: "var(--teal-deep)", opacity: 0.7 }}>
           — Volledige knipsels op aanvraag —
         </div>
       </div>
     </section>);
-
 }
 
 // ----- Contact -----
@@ -491,9 +404,7 @@ function Contact() {
     <section className="contact" id="contact">
       <div className="shell">
         <div className="reveal">
-          <div style={{ fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.18em", color: "var(--orange)", marginBottom: "32px" }}>Contact
-
-          </div>
+          <div style={{ fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.18em", color: "var(--orange)", marginBottom: "32px" }}>Contact</div>
           <h2 className="contact-h">
             Quiz te <em>verdedigen?</em><br />
             We denken erover na.
@@ -501,7 +412,7 @@ function Contact() {
           <div className="contact-meta reveal-stagger" style={{ marginTop: "40px" }}>
             <div className="row">
               <span className="k">EMAIL</span>
-              <span className="v"><a href="mailto:info@teluiomtewinnen.be" style={{ textDecoration: "none" }}>info@teluiomtewinnen.be</a></span>
+              <span className="v"><a href="mailto:info@teluiomtewinnen.be">info@teluiomtewinnen.be</a></span>
             </div>
             <div className="row">
               <span className="k">BASIS</span>
@@ -515,12 +426,11 @@ function Contact() {
         </div>
         <div className="reveal">
           {sent ?
-          <div className="cf-thanks">
+            <div className="cf-thanks">
               Bericht <em>verzonden.</em><br />
               We laten van ons horen — vermoedelijk net na de borrelplank.
             </div> :
-
-          <form className="contact-form" onSubmit={onSubmit}>
+            <form className="contact-form" onSubmit={onSubmit}>
               <div className="cf-row">
                 <div className="cf-field">
                   <label htmlFor="cf-name">Jouw naam</label>
@@ -551,7 +461,6 @@ function Contact() {
         </div>
       </div>
     </section>);
-
 }
 
 // ----- Footer -----
@@ -564,7 +473,6 @@ function Footer() {
         <div>info@teluiomtewinnen.be</div>
       </div>
     </footer>);
-
 }
 
 Object.assign(window, {

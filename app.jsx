@@ -1,5 +1,5 @@
 // App.jsx — root + tweaks wiring
-const { useEffect: useEffectApp } = React;
+const { useEffect: useEffectApp, useState: useStateApp } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "mode": "dark",
@@ -13,6 +13,7 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 
 function App() {
   const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [content, setContent] = useStateApp(null);
 
   useReveal();
 
@@ -21,17 +22,36 @@ function App() {
     document.body.dataset.type = tweaks.type;
   }, [tweaks.mode, tweaks.type]);
 
+  useEffectApp(() => {
+    fetch('content.json?v=' + Date.now())
+      .then(r => r.json())
+      .then(setContent)
+      .catch(() => setContent({}));
+  }, []);
+
+  if (!content) {
+    return (
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        height: '100vh', fontFamily: 'var(--font-mono)', fontSize: '13px',
+        letterSpacing: '0.08em', color: 'var(--teal-deep)'
+      }}>
+        laden…
+      </div>
+    );
+  }
+
   return (
     <>
       {tweaks.showProgress && <ScrollProgress />}
       <Nav />
-      <Hero showLogo={tweaks.showLogo} />
+      <Hero uitslagen={content.uitslagen} kalender={content.kalender} />
       <About />
-      {tweaks.showMottos && <Mottos />}
-      <Uitslagen />
-      <Kalender />
-      <Leden />
-      {tweaks.showMedia && <Media />}
+      {tweaks.showMottos && <Mottos mottos={content.mottos} />}
+      <Uitslagen uitslagen={content.uitslagen} />
+      <Kalender kalender={content.kalender} />
+      <Leden leden={content.leden} />
+      {tweaks.showMedia && <Media media={content.media} />}
       <Contact />
       <Footer />
 

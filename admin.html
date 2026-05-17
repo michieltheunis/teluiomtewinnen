@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Beheer — Te Lui Om Te Winnen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0E1413;
+  --bg2: #151C1B;
+  --bg3: #1E2725;
+  --border: rgba(233,226,211,0.14);
+  --border-strong: rgba(233,226,211,0.28);
+  --fg: #E9E2D3;
+  --fg-soft: rgba(233,226,211,0.55);
+  --orange: #F0A95C;
+  --orange-deep: #E59A4F;
+  --teal: #9DB5B0;
+  --teal-deep: #C5D2CF;
+  --danger: #e05c5c;
+  --font: "Manrope", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { font-family: var(--font); background: var(--bg); color: var(--fg); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+
+/* ---- Login ---- */
+#login-screen {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 40px 20px;
+}
+.login-box {
+  width: 100%; max-width: 420px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg2);
+  padding: 48px 40px;
+}
+.login-logo {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+  color: var(--orange); margin-bottom: 32px;
+}
+.login-title {
+  font-size: 28px; font-weight: 300; letter-spacing: -0.02em;
+  color: var(--fg); margin-bottom: 8px;
+}
+.login-sub {
+  font-size: 13px; color: var(--fg-soft); margin-bottom: 36px;
+}
+.field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.field label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; color: var(--teal-deep); }
+.field input, .field select, .field textarea {
+  background: var(--bg3); border: 1px solid var(--border-strong);
+  color: var(--fg); font-family: var(--font); font-size: 15px;
+  padding: 11px 14px; outline: none;
+  transition: border-color 0.2s;
+}
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--orange); }
+.field input::placeholder, .field textarea::placeholder { color: var(--fg-soft); }
+.field textarea { resize: vertical; min-height: 70px; }
+.field-hint { font-size: 12px; color: var(--fg-soft); line-height: 1.4; margin-top: 4px; }
+.field-hint a { color: var(--orange); }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--orange); color: #1B2422;
+  border: none; font-family: var(--mono); font-size: 12px;
+  letter-spacing: 0.04em; font-weight: 600;
+  padding: 13px 22px; cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn:hover { background: #F5BA75; transform: translateX(2px); }
+.btn.secondary { background: transparent; border: 1px solid var(--border-strong); color: var(--fg-soft); }
+.btn.secondary:hover { border-color: var(--fg-soft); color: var(--fg); transform: none; }
+.btn.danger { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+.btn.danger:hover { background: var(--danger); color: #fff; transform: none; }
+.btn.small { padding: 7px 14px; font-size: 11px; }
+.login-err { color: var(--danger); font-size: 13px; margin-top: 14px; display: none; }
+
+/* ---- App shell ---- */
+#app { display: none; flex-direction: column; min-height: 100vh; }
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; height: 56px; gap: 24px;
+}
+.topbar-brand { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--orange); }
+.topbar-save-wrap { display: flex; align-items: center; gap: 14px; }
+.save-status { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--fg-soft); }
+.save-status.ok { color: #5cb85c; }
+.save-status.err { color: var(--danger); }
+
+/* ---- Tabs ---- */
+.tabs { background: var(--bg2); border-bottom: 1px solid var(--border); display: flex; padding: 0 32px; gap: 0; }
+.tab {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
+  color: var(--fg-soft); background: none; border: none;
+  padding: 14px 20px; cursor: pointer; border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.tab:hover { color: var(--fg); }
+.tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+/* ---- Content area ---- */
+.content { flex: 1; padding: 40px 32px; max-width: 1100px; }
+.section-title {
+  font-size: 22px; font-weight: 300; letter-spacing: -0.01em;
+  color: var(--fg); margin-bottom: 6px;
+}
+.section-sub { font-size: 13px; color: var(--fg-soft); margin-bottom: 32px; }
+
+/* ---- Season selector (uitslagen) ---- */
+.season-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.season-pill {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+  background: var(--bg3); border: 1px solid var(--border-strong);
+  color: var(--fg-soft); padding: 6px 14px; cursor: pointer;
+  transition: all 0.2s;
+}
+.season-pill.active { background: var(--orange); color: #1B2422; border-color: var(--orange); font-weight: 600; }
+.season-pill:hover:not(.active) { color: var(--fg); border-color: var(--fg-soft); }
+.add-season-field { display: flex; gap: 8px; align-items: center; }
+.add-season-field input { width: 120px; }
+
+/* ---- Item list ---- */
+.item-list { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); }
+.item-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.item-row:last-child { border-bottom: none; }
+.item-row:hover { background: var(--bg2); }
+.item-row-info { flex: 1; min-width: 0; }
+.item-row-title { font-size: 15px; color: var(--fg); font-weight: 500; }
+.item-row-sub { font-size: 12px; color: var(--fg-soft); font-family: var(--mono); margin-top: 3px; }
+.item-row-actions { display: flex; gap: 8px; flex-shrink: 0; padding-top: 2px; }
+
+/* ---- Edit form (inline) ---- */
+.edit-form {
+  background: var(--bg3); border: 1px solid var(--border-strong);
+  padding: 24px; margin-bottom: 0;
+}
+.edit-form-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; color: var(--orange); margin-bottom: 20px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-grid.single { grid-template-columns: 1fr; }
+.form-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+/* ---- Add item button ---- */
+.add-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 14px; border: 1px dashed var(--border-strong);
+  background: none; color: var(--fg-soft); font-family: var(--mono);
+  font-size: 12px; letter-spacing: 0.04em; cursor: pointer;
+  margin-top: 12px; transition: all 0.2s;
+}
+.add-btn:hover { border-color: var(--orange); color: var(--orange); background: rgba(240,169,92,0.05); }
+
+/* ---- Confirm dialog ---- */
+.overlay {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.7); align-items: center; justify-content: center;
+}
+.overlay.open { display: flex; }
+.dialog {
+  background: var(--bg2); border: 1px solid var(--border-strong);
+  padding: 36px; max-width: 380px; width: 90%;
+}
+.dialog-title { font-size: 18px; font-weight: 500; margin-bottom: 10px; }
+.dialog-body { font-size: 14px; color: var(--fg-soft); margin-bottom: 28px; line-height: 1.5; }
+.dialog-actions { display: flex; gap: 10px; }
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .topbar, .tabs, .content { padding-left: 16px; padding-right: 16px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .tab { padding: 12px 12px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">Te Lui Om Te Winnen · Beheer</div>
+    <div class="login-title">Inloggen</div>
+    <div class="login-sub">Vul je PIN en je GitHub-token in om door te gaan.</div>
+    <div class="field">
+      <label>PIN</label>
+      <input type="password" id="pin-input" placeholder="••••" maxlength="20" />
+    </div>
+    <div class="field">
+      <label>GitHub-token</label>
+      <input type="password" id="token-input" placeholder="ghp_..." autocomplete="off" />
+      <div class="field-hint">
+        Nog geen token? Ga naar
+        <a href="https://github.com/settings/tokens/new?scopes=repo&description=TLOTW+Beheer" target="_blank">GitHub → Settings → Personal access tokens</a>
+        en maak een token aan met <strong>repo</strong>-rechten.
+      </div>
+    </div>
+    <button class="btn" onclick="doLogin()">Doorgaan →</button>
+    <div class="login-err" id="login-err">Fout PIN of token.</div>
+  </div>
+</div>
+
+<!-- CONFIRM DIALOG -->
+<div class="overlay" id="confirm-overlay">
+  <div class="dialog">
+    <div class="dialog-title">Verwijderen?</div>
+    <div class="dialog-body" id="confirm-body">Ben je zeker dat je dit item wil verwijderen?</div>
+    <div class="dialog-actions">
+      <button class="btn danger" id="confirm-yes">Verwijderen</button>
+      <button class="btn secondary" onclick="closeConfirm()">Annuleren</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-brand">TLOTW · Beheer</div>
+    <div class="topbar-save-wrap">
+      <span class="save-status" id="save-status"></span>
+      <button class="btn" onclick="saveContent()">Opslaan →</button>
+      <button class="btn secondary small" onclick="doLogout()">Uitloggen</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('kalender', this)">Kalender</button>
+    <button class="tab" onclick="switchTab('uitslagen', this)">Uitslagen</button>
+    <button class="tab" onclick="switchTab('leden', this)">Leden</button>
+    <button class="tab" onclick="switchTab('mottos', this)">Motto's</button>
+    <button class="tab" onclick="switchTab('media', this)">Persartikelen</button>
+  </div>
+
+  <div class="content" id="content-area"></div>
+</div>
+
+<script>
+// ---- Config ----
+const OWNER = 'michieltheunis';
+const REPO  = 'teluiomtewinnen';
+const FILE  = 'content.json';
+// SHA-256 of PIN "2016"
+const PIN_HASH = 'da6e2f539726fabd1f8cd7c9469a22b36769137975b28abc65fe2dc29e659b77';
+
+let content = null;
+let token   = null;
+let currentTab = 'kalender';
+let currentSeason = null;
+let pendingDelete = null;
+
+// ---- Auth ----
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function doLogin() {
+  const pin = document.getElementById('pin-input').value;
+  const tok = document.getElementById('token-input').value.trim();
+  const err = document.getElementById('login-err');
+  err.style.display = 'none';
+  if (!pin || !tok) { err.textContent = 'Vul alle velden in.'; err.style.display='block'; return; }
+  const hash = await sha256(pin);
+  if (hash !== PIN_HASH) { err.textContent = 'Fout PIN.'; err.style.display='block'; return; }
+  token = tok;
+  localStorage.setItem('tlotw_token', tok);
+  await loadContent();
+}
+
+function doLogout() {
+  token = null;
+  localStorage.removeItem('tlotw_token');
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('pin-input').value = '';
+  document.getElementById('token-input').value = '';
+}
+
+// Auto-fill token from localStorage
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('tlotw_token');
+  if (saved) document.getElementById('token-input').value = saved;
+});
+
+// ---- GitHub API ----
+async function ghGet() {
+  const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}`, {
+    headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }
+  });
+  if (!r.ok) throw new Error('Kon content niet ophalen (status ' + r.status + '). Controleer je token.');
+  return r.json();
+}
+
+async function loadContent() {
+  setStatus('Laden…', '');
+  try {
+    const file = await ghGet();
+    content = JSON.parse(atob(file.content.replace(/\n/g,'')));
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    if (content.uitslagen) currentSeason = Object.keys(content.uitslagen)[0];
+    renderTab();
+    setStatus('', '');
+  } catch(e) {
+    document.getElementById('login-err').textContent = e.message;
+    document.getElementById('login-err').style.display = 'block';
+  }
+}
+
+async function saveContent() {
+  setStatus('Opslaan…', '');
+  try {
+    const file = await ghGet();
+    const body = JSON.stringify({
+      message: 'Beheer: content bijgewerkt',
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
+      sha: file.sha
+    });
+    const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}`, {
+      method: 'PUT',
+      headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body
+    });
+    if (!r.ok) { const d = await r.json(); throw new Error(d.message || 'Opslaan mislukt'); }
+    setStatus('✓ Opgeslagen — live binnen ~1 minuut', 'ok');
+    setTimeout(() => setStatus('', ''), 6000);
+  } catch(e) {
+    setStatus('✗ ' + e.message, 'err');
+  }
+}
+
+function setStatus(msg, cls) {
+  const el = document.getElementById('save-status');
+  el.textContent = msg;
+  el.className = 'save-status' + (cls ? ' ' + cls : '');
+}
+
+// ---- Tabs ----
+function switchTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderTab();
+}
+
+function renderTab() {
+  const area = document.getElementById('content-area');
+  if (currentTab === 'kalender') area.innerHTML = renderKalender();
+  else if (currentTab === 'uitslagen') area.innerHTML = renderUitslagen();
+  else if (currentTab === 'leden') area.innerHTML = renderLeden();
+  else if (currentTab === 'mottos') area.innerHTML = renderMottos();
+  else if (currentTab === 'media') area.innerHTML = renderMedia();
+}
+
+// ---- Confirm dialog ----
+function confirmDelete(label, onYes) {
+  document.getElementById('confirm-body').textContent = `Verwijder "${label}"?`;
+  document.getElementById('confirm-overlay').classList.add('open');
+  pendingDelete = () => { onYes(); closeConfirm(); renderTab(); };
+  document.getElementById('confirm-yes').onclick = pendingDelete;
+}
+function closeConfirm() {
+  document.getElementById('confirm-overlay').classList.remove('open');
+  pendingDelete = null;
+}
+
+// ---- Escape HTML ----
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ---- Form helpers ----
+function field(id, label, value, opts={}) {
+  const type = opts.type || 'text';
+  const hint = opts.hint ? `<div class="field-hint">${opts.hint}</div>` : '';
+  if (type === 'textarea') {
+    return `<div class="field"><label>${label}</label><textarea id="${id}" rows="3">${esc(value)}</textarea>${hint}</div>`;
+  }
+  if (type === 'checkbox') {
+    const chk = value ? 'checked' : '';
+    return `<div class="field" style="flex-direction:row;align-items:center;gap:10px"><input type="checkbox" id="${id}" ${chk} style="width:18px;height:18px;accent-color:var(--orange)"><label style="margin:0">${label}</label>${hint}</div>`;
+  }
+  return `<div class="field"><label>${label}</label><input type="${type}" id="${id}" value="${esc(value)}" placeholder="${esc(opts.placeholder||'')}">${hint}</div>`;
+}
+
+function getVal(id) { const el = document.getElementById(id); return el ? (el.type==='checkbox' ? el.checked : el.value.trim()) : ''; }
+
+// ==============================
+// KALENDER
+// ==============================
+function renderKalender() {
+  let rows = '';
+  (content.kalender || []).forEach((k, i) => {
+    rows += `
+    <div class="item-row" id="kal-row-${i}">
+      <div class="item-row-info">
+        <div class="item-row-title">${esc(k.d)} ${esc(k.m)} — ${esc(k.quiz)}</div>
+        <div class="item-row-sub">${esc(k.where)} · ${esc((k.ploeg||[]).join(', '))}</div>
+      </div>
+      <div class="item-row-actions">
+        <button class="btn secondary small" onclick="editKal(${i})">Bewerken</button>
+        <button class="btn danger small" onclick="deleteKal(${i})">✕</button>
+      </div>
+    </div>
+    <div id="kal-form-${i}" style="display:none"></div>`;
+  });
+  return `
+    <div class="section-title">Kalender</div>
+    <div class="section-sub">Komende quizzen beheren. Gebruik "?" voor onbevestigde deelnemers.</div>
+    <div class="item-list">${rows}</div>
+    <button class="add-btn" onclick="addKal()">+ Quiz toevoegen</button>
+    <div id="kal-add-form"></div>`;
+}
+
+function editKal(i) {
+  const k = content.kalender[i];
+  document.getElementById('kal-form-'+i).style.display = 'block';
+  document.getElementById('kal-form-'+i).innerHTML = kalForm('kal-e-'+i, k, `saveKal(${i})`, `cancelKal(${i})`);
+}
+function cancelKal(i) { document.getElementById('kal-form-'+i).style.display='none'; }
+function saveKal(i) {
+  content.kalender[i] = readKalForm('kal-e-'+i);
+  renderTab();
+}
+function deleteKal(i) {
+  confirmDelete(content.kalender[i].quiz, () => content.kalender.splice(i,1));
+}
+function addKal() {
+  const pf = document.getElementById('kal-add-form');
+  pf.innerHTML = kalForm('kal-new', {d:'',m:'',quiz:'',where:'Lommel',ploeg:[]}, 'saveKalNew()', 'cancelKalNew()');
+}
+function saveKalNew() { content.kalender.push(readKalForm('kal-new')); renderTab(); }
+function cancelKalNew() { document.getElementById('kal-add-form').innerHTML=''; }
+function kalForm(pfx, k, onSave, onCancel) {
+  return `<div class="edit-form">
+    <div class="edit-form-title">Quiz bewerken</div>
+    <div class="form-grid">
+      ${field(pfx+'-d','Dag',k.d,{placeholder:'08'})}
+      ${field(pfx+'-m','Maand (afkorting)',k.m,{placeholder:'MEI'})}
+      ${field(pfx+'-quiz','Naam quiz',k.quiz)}
+      ${field(pfx+'-where','Locatie',k.where)}
+    </div>
+    ${field(pfx+'-ploeg','Deelnemers (komma-gescheiden)',Array.isArray(k.ploeg)?k.ploeg.join(', '):'',{placeholder:'Michiel, Jorik, ?'})}
+    <div class="form-actions">
+      <button class="btn" onclick="${onSave}">Opslaan</button>
+      <button class="btn secondary" onclick="${onCancel}">Annuleren</button>
+    </div>
+  </div>`;
+}
+function readKalForm(pfx) {
+  return {
+    d: getVal(pfx+'-d'),
+    m: getVal(pfx+'-m').toUpperCase(),
+    quiz: getVal(pfx+'-quiz'),
+    where: getVal(pfx+'-where'),
+    ploeg: getVal(pfx+'-ploeg').split(',').map(s=>s.trim()).filter(Boolean)
+  };
+}
+
+// ==============================
+// UITSLAGEN
+// ==============================
+function renderUitslagen() {
+  const seasons = Object.keys(content.uitslagen || {});
+  if (!currentSeason || !content.uitslagen[currentSeason]) currentSeason = seasons[0];
+  const pills = seasons.map(s =>
+    `<button class="season-pill ${s===currentSeason?'active':''}" onclick="switchSeason('${esc(s)}')">${esc(s)}</button>`
+  ).join('');
+  const rows = content.uitslagen[currentSeason] || [];
+  let rowHtml = '';
+  rows.forEach((u, i) => {
+    const badge = u.youthWin ? ' ★ Jeugd' : '';
+    const sub = u.placeholder ? 'Archief-placeholder' : `${esc(u.place)} · ${esc(u.rank)}/${esc(u.of)}${badge}`;
+    rowHtml += `
+    <div class="item-row">
+      <div class="item-row-info">
+        <div class="item-row-title">${esc(u.date)} — ${esc(u.quiz)}</div>
+        <div class="item-row-sub">${sub}</div>
+      </div>
+      <div class="item-row-actions">
+        <button class="btn secondary small" onclick="editUit(${i})">Bewerken</button>
+        <button class="btn danger small" onclick="deleteUit(${i})">✕</button>
+      </div>
+    </div>
+    <div id="uit-form-${i}" style="display:none"></div>`;
+  });
+  return `
+    <div class="section-title">Uitslagen</div>
+    <div class="section-sub">Resultaten per seizoen. Voeg ook een nieuw seizoen toe via de knop onderaan.</div>
+    <div class="season-bar">
+      ${pills}
+      <div class="add-season-field">
+        <input class="field input" id="new-season-input" placeholder="2026/27" style="width:110px;padding:6px 10px;background:var(--bg3);border:1px solid var(--border-strong);color:var(--fg);font-family:var(--mono);font-size:12px">
+        <button class="btn small" onclick="addSeason()">+ Seizoen</button>
+      </div>
+    </div>
+    <div class="item-list" id="uit-list">${rowHtml}</div>
+    <button class="add-btn" onclick="addUit()">+ Uitslag toevoegen</button>
+    <div id="uit-add-form"></div>`;
+}
+
+function switchSeason(s) { currentSeason = s; renderTab(); }
+function addSeason() {
+  const name = document.getElementById('new-season-input').value.trim();
+  if (!name || content.uitslagen[name]) return;
+  content.uitslagen[name] = [];
+  currentSeason = name;
+  renderTab();
+}
+function editUit(i) {
+  const u = content.uitslagen[currentSeason][i];
+  document.getElementById('uit-form-'+i).style.display='block';
+  document.getElementById('uit-form-'+i).innerHTML = uitForm('uit-e-'+i, u, `saveUit(${i})`, `cancelUit(${i})`);
+}
+function cancelUit(i) { document.getElementById('uit-form-'+i).style.display='none'; }
+function saveUit(i) { content.uitslagen[currentSeason][i] = readUitForm('uit-e-'+i); renderTab(); }
+function deleteUit(i) {
+  confirmDelete(content.uitslagen[currentSeason][i].quiz, () => content.uitslagen[currentSeason].splice(i,1));
+}
+function addUit() {
+  document.getElementById('uit-add-form').innerHTML = uitForm('uit-new',{date:'',quiz:'',place:'Lommel',rank:'',of:'',youthWin:false},'saveUitNew()','cancelUitNew()');
+}
+function saveUitNew() { content.uitslagen[currentSeason].unshift(readUitForm('uit-new')); renderTab(); }
+function cancelUitNew() { document.getElementById('uit-add-form').innerHTML=''; }
+function uitForm(pfx, u, onSave, onCancel) {
+  return `<div class="edit-form">
+    <div class="edit-form-title">Uitslag bewerken</div>
+    <div class="form-grid">
+      ${field(pfx+'-date','Datum',u.date,{placeholder:'14 NOV 2025'})}
+      ${field(pfx+'-quiz','Naam quiz',u.quiz)}
+      ${field(pfx+'-place','Locatie',u.place)}
+      ${field(pfx+'-rank','Eindstand (getal)',u.rank,{placeholder:'3'})}
+      ${field(pfx+'-of','Totaal ploegen',u.of,{placeholder:'42'})}
+    </div>
+    ${field(pfx+'-youth','Beste jongerenploeg',u.youthWin,{type:'checkbox'})}
+    <div class="form-actions">
+      <button class="btn" onclick="${onSave}">Opslaan</button>
+      <button class="btn secondary" onclick="${onCancel}">Annuleren</button>
+    </div>
+  </div>`;
+}
+function readUitForm(pfx) {
+  const rank = getVal(pfx+'-rank');
+  const of   = getVal(pfx+'-of');
+  return {
+    date: getVal(pfx+'-date'),
+    quiz: getVal(pfx+'-quiz'),
+    place: getVal(pfx+'-place'),
+    rank: isNaN(rank) || rank==='' ? rank : Number(rank),
+    of: isNaN(of) || of==='' ? of : Number(of),
+    youthWin: getVal(pfx+'-youth') || undefined
+  };
+}
+
+// ==============================
+// LEDEN
+// ==============================
+function renderLeden() {
+  let rows = '';
+  (content.leden || []).forEach((l, i) => {
+    rows += `
+    <div class="item-row">
+      <div class="item-row-info">
+        <div class="item-row-title">${esc(l.name)}</div>
+        <div class="item-row-sub">${esc(l.role)}</div>
+      </div>
+      <div class="item-row-actions">
+        <button class="btn secondary small" onclick="editLid(${i})">Bewerken</button>
+        <button class="btn danger small" onclick="deleteLid(${i})">✕</button>
+      </div>
+    </div>
+    <div id="lid-form-${i}" style="display:none"></div>`;
+  });
+  return `
+    <div class="section-title">Leden</div>
+    <div class="section-sub">Teamleden beheren. Foto's via een publieke URL (bv. Google Photos, Imgur).</div>
+    <div class="item-list">${rows}</div>
+    <button class="add-btn" onclick="addLid()">+ Lid toevoegen</button>
+    <div id="lid-add-form"></div>`;
+}
+
+function editLid(i) {
+  const l = content.leden[i];
+  document.getElementById('lid-form-'+i).style.display='block';
+  document.getElementById('lid-form-'+i).innerHTML = lidForm('lid-e-'+i, l, `saveLid(${i})`, `cancelLid(${i})`);
+}
+function cancelLid(i) { document.getElementById('lid-form-'+i).style.display='none'; }
+function saveLid(i) { content.leden[i] = readLidForm('lid-e-'+i); renderTab(); }
+function deleteLid(i) {
+  confirmDelete(content.leden[i].name, () => content.leden.splice(i,1));
+}
+function addLid() {
+  document.getElementById('lid-add-form').innerHTML = lidForm('lid-new',{name:'',role:'',bio:'',photo:''},'saveLidNew()','cancelLidNew()');
+}
+function saveLidNew() { content.leden.push(readLidForm('lid-new')); renderTab(); }
+function cancelLidNew() { document.getElementById('lid-add-form').innerHTML=''; }
+function lidForm(pfx, l, onSave, onCancel) {
+  return `<div class="edit-form">
+    <div class="edit-form-title">Lid bewerken</div>
+    <div class="form-grid">
+      ${field(pfx+'-name','Naam',l.name)}
+      ${field(pfx+'-role','Rol / specialiteit',l.role)}
+    </div>
+    ${field(pfx+'-bio','Bio',l.bio,{type:'textarea'})}
+    ${field(pfx+'-photo','Foto-URL (optioneel)',l.photo||'',{placeholder:'https://...jpg',hint:'Publieke URL van een foto. Laat leeg voor het standaard patroon.'})}
+    <div class="form-actions">
+      <button class="btn" onclick="${onSave}">Opslaan</button>
+      <button class="btn secondary" onclick="${onCancel}">Annuleren</button>
+    </div>
+  </div>`;
+}
+function readLidForm(pfx) {
+  return { name: getVal(pfx+'-name'), role: getVal(pfx+'-role'), bio: getVal(pfx+'-bio'), photo: getVal(pfx+'-photo') };
+}
+
+// ==============================
+// MOTTO'S
+// ==============================
+function renderMottos() {
+  let rows = '';
+  (content.mottos || []).forEach((m, i) => {
+    rows += `
+    <div class="item-row">
+      <div class="item-row-info">
+        <div class="item-row-title" style="font-style:italic">"${esc(m.q)}"</div>
+        <div class="item-row-sub">${esc(m.a)}</div>
+      </div>
+      <div class="item-row-actions">
+        <button class="btn secondary small" onclick="editMotto(${i})">Bewerken</button>
+        <button class="btn danger small" onclick="deleteMotto(${i})">✕</button>
+      </div>
+    </div>
+    <div id="motto-form-${i}" style="display:none"></div>`;
+  });
+  return `
+    <div class="section-title">Motto's & leuzen</div>
+    <div class="section-sub">De droge citaten onderaan de leuzen-sectie.</div>
+    <div class="item-list">${rows}</div>
+    <button class="add-btn" onclick="addMotto()">+ Leuze toevoegen</button>
+    <div id="motto-add-form"></div>`;
+}
+
+function editMotto(i) {
+  const m = content.mottos[i];
+  document.getElementById('motto-form-'+i).style.display='block';
+  document.getElementById('motto-form-'+i).innerHTML = mottoForm('motto-e-'+i, m, `saveMotto(${i})`, `cancelMotto(${i})`);
+}
+function cancelMotto(i) { document.getElementById('motto-form-'+i).style.display='none'; }
+function saveMotto(i) { content.mottos[i] = readMottoForm('motto-e-'+i); renderTab(); }
+function deleteMotto(i) {
+  confirmDelete(content.mottos[i].q.slice(0,40)+'…', () => content.mottos.splice(i,1));
+}
+function addMotto() {
+  document.getElementById('motto-add-form').innerHTML = mottoForm('motto-new',{q:'',a:''},'saveMottoNew()','cancelMottoNew()');
+}
+function saveMottoNew() { content.mottos.push(readMottoForm('motto-new')); renderTab(); }
+function cancelMottoNew() { document.getElementById('motto-add-form').innerHTML=''; }
+function mottoForm(pfx, m, onSave, onCancel) {
+  return `<div class="edit-form">
+    <div class="edit-form-title">Leuze bewerken</div>
+    ${field(pfx+'-q','Citaat',m.q,{type:'textarea'})}
+    ${field(pfx+'-a','Toeschrijving',m.a,{placeholder:'Michiel, openingswoord'})}
+    <div class="form-actions">
+      <button class="btn" onclick="${onSave}">Opslaan</button>
+      <button class="btn secondary" onclick="${onCancel}">Annuleren</button>
+    </div>
+  </div>`;
+}
+function readMottoForm(pfx) {
+  return { q: getVal(pfx+'-q'), a: getVal(pfx+'-a') };
+}
+
+// ==============================
+// MEDIA / PERSARTIKELEN
+// ==============================
+function renderMedia() {
+  let rows = '';
+  (content.media || []).forEach((clip, i) => {
+    rows += `
+    <div class="item-row">
+      <div class="item-row-info">
+        <div class="item-row-title">${esc(clip.titel)}</div>
+        <div class="item-row-sub">${esc(clip.bron)} · ${esc(clip.datum)}</div>
+      </div>
+      <div class="item-row-actions">
+        <button class="btn secondary small" onclick="editClip(${i})">Bewerken</button>
+        <button class="btn danger small" onclick="deleteClip(${i})">✕</button>
+      </div>
+    </div>
+    <div id="clip-form-${i}" style="display:none"></div>`;
+  });
+  return `
+    <div class="section-title">Persartikelen</div>
+    <div class="section-sub">Krantenknipsels en media-vermeldingen op de site.</div>
+    <div class="item-list">${rows}</div>
+    <button class="add-btn" onclick="addClip()">+ Artikel toevoegen</button>
+    <div id="clip-add-form"></div>`;
+}
+
+function editClip(i) {
+  const c = content.media[i];
+  document.getElementById('clip-form-'+i).style.display='block';
+  document.getElementById('clip-form-'+i).innerHTML = clipForm('clip-e-'+i, c, `saveClip(${i})`, `cancelClip(${i})`);
+}
+function cancelClip(i) { document.getElementById('clip-form-'+i).style.display='none'; }
+function saveClip(i) { content.media[i] = readClipForm('clip-e-'+i); renderTab(); }
+function deleteClip(i) {
+  confirmDelete(content.media[i].titel, () => content.media.splice(i,1));
+}
+function addClip() {
+  document.getElementById('clip-add-form').innerHTML = clipForm('clip-new',{bron:'De Lommelse Gazet',datum:'',titel:'',quote:'',foto:''},'saveClipNew()','cancelClipNew()');
+}
+function saveClipNew() { content.media.push(readClipForm('clip-new')); renderTab(); }
+function cancelClipNew() { document.getElementById('clip-add-form').innerHTML=''; }
+function clipForm(pfx, c, onSave, onCancel) {
+  return `<div class="edit-form">
+    <div class="edit-form-title">Artikel bewerken</div>
+    <div class="form-grid">
+      ${field(pfx+'-bron','Bron',c.bron,{placeholder:'De Lommelse Gazet'})}
+      ${field(pfx+'-datum','Datum',c.datum,{placeholder:'15.11.2025'})}
+    </div>
+    ${field(pfx+'-titel','Titel',c.titel)}
+    ${field(pfx+'-quote','Citaat / samenvatting',c.quote,{type:'textarea'})}
+    ${field(pfx+'-foto','Foto-URL (optioneel)',c.foto||'',{placeholder:'https://...jpg',hint:'Publieke URL van een afbeelding van het artikel.'})}
+    <div class="form-actions">
+      <button class="btn" onclick="${onSave}">Opslaan</button>
+      <button class="btn secondary" onclick="${onCancel}">Annuleren</button>
+    </div>
+  </div>`;
+}
+function readClipForm(pfx) {
+  return { bron: getVal(pfx+'-bron'), datum: getVal(pfx+'-datum'), titel: getVal(pfx+'-titel'), quote: getVal(pfx+'-quote'), foto: getVal(pfx+'-foto') };
+}
+</script>
+</body>
+</html>
