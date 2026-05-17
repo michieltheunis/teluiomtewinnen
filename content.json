@@ -1,45 +1,238 @@
 {
   "kalender": [
-    { "d": "08", "m": "MEI", "quiz": "Quiztion", "where": "Lommel", "ploeg": ["Michiel", "Jorik", "Nore", "Baileyke", "Rik", "Rosalie"] },
-    { "d": "15", "m": "MEI", "quiz": "Bruudruusterquiz", "where": "Lommel", "ploeg": ["Michiel", "Robin", "Jorik", "Jensie", "Baileyke", "Wouter"] },
-    { "d": "18", "m": "SEP", "quiz": "Geknipte Lommelse Gazet Quiz", "where": "Lommel", "ploeg": ["Michiel", "?", "?", "?", "?", "?"] },
-    { "d": "09", "m": "OKT", "quiz": "FC Vandenberken Quiz", "where": "Lommel", "ploeg": ["Michiel", "Bob", "Jorik", "Jensie", "Robin", "?"] },
-    { "d": "30", "m": "OKT", "quiz": "Lovoc Quiz", "where": "Lommel", "ploeg": ["Michiel", "Bob", "Jorik", "Jensie", "Robin", "?"] }
+    {
+      "d": "08",
+      "m": "MEI",
+      "quiz": "Quiztion",
+      "where": "Lommel",
+      "ploeg": [
+        "Michiel",
+        "Jorik",
+        "Nore",
+        "Baileyke",
+        "Rik",
+        "Rosalie"
+      ]
+    },
+    {
+      "d": "15",
+      "m": "MEI",
+      "quiz": "Bruudruusterquiz",
+      "where": "Lommel",
+      "ploeg": [
+        "Michiel",
+        "Robin",
+        "Jorik",
+        "Jensie",
+        "Baileyke",
+        "Wouter"
+      ]
+    },
+    {
+      "d": "18",
+      "m": "SEP",
+      "quiz": "Geknipte Lommelse Gazet Quiz",
+      "where": "Lommel",
+      "ploeg": [
+        "Michiel",
+        "?",
+        "?",
+        "?",
+        "?",
+        "?"
+      ]
+    },
+    {
+      "d": "09",
+      "m": "OKT",
+      "quiz": "FC Vandenberken Quiz",
+      "where": "Lommel",
+      "ploeg": [
+        "Michiel",
+        "Bob",
+        "Jorik",
+        "Jensie",
+        "Robin",
+        "?"
+      ]
+    },
+    {
+      "d": "30",
+      "m": "OKT",
+      "quiz": "Lovoc Quiz",
+      "where": "Lommel",
+      "ploeg": [
+        "Michiel",
+        "Bob",
+        "Jorik",
+        "Jensie",
+        "Robin",
+        "?"
+      ]
+    }
   ],
   "uitslagen": {
     "2025/26": [
-      { "date": "24 APR 2026", "quiz": "Die van os quiz", "place": "Lommel", "rank": 4, "of": 39 },
-      { "date": "17 APR 2026", "quiz": "Mèndetquiz", "place": "Lommel", "rank": 5, "of": 37, "youthWin": true },
-      { "date": "27 MRT 2026", "quiz": "COE Quiz", "place": "Lommel", "rank": 4, "of": 36 },
-      { "date": "14 MRT 2026", "quiz": "Klapkwis", "place": "Lommel", "rank": 4, "of": 75 },
-      { "date": "27 FEB 2026", "quiz": "Leopoldquiz", "place": "Lommel", "rank": 7, "of": 46 },
-      { "date": "14 NOV 2025", "quiz": "Lovoc Quiz", "place": "Lommel", "rank": 1, "of": 36 },
-      { "date": "10 OKT 2025", "quiz": "FC Vandenberken Quiz", "place": "Lommel", "rank": 3, "of": 42 },
-      { "date": "19 SEP 2025", "quiz": "Internetgazet Quiz", "place": "Lommel", "rank": 7, "of": 33 },
-      { "date": "14 AUG 2025", "quiz": "Sporta Quiz", "place": "Westerlo", "rank": 6, "of": 14 }
+      {
+        "date": "24 APR 2026",
+        "quiz": "Die van os quiz",
+        "place": "Lommel",
+        "rank": 4,
+        "of": 39
+      },
+      {
+        "date": "17 APR 2026",
+        "quiz": "MÃ¨ndetquiz",
+        "place": "Lommel",
+        "rank": 5,
+        "of": 37,
+        "youthWin": true
+      },
+      {
+        "date": "27 MRT 2026",
+        "quiz": "COE Quiz",
+        "place": "Lommel",
+        "rank": 4,
+        "of": 36
+      },
+      {
+        "date": "14 MRT 2026",
+        "quiz": "Klapkwis",
+        "place": "Lommel",
+        "rank": 4,
+        "of": 75
+      },
+      {
+        "date": "27 FEB 2026",
+        "quiz": "Leopoldquiz",
+        "place": "Lommel",
+        "rank": 7,
+        "of": 46
+      },
+      {
+        "date": "14 NOV 2025",
+        "quiz": "Lovoc Quiz",
+        "place": "Lommel",
+        "rank": 1,
+        "of": 36
+      },
+      {
+        "date": "10 OKT 2025",
+        "quiz": "FC Vandenberken Quiz",
+        "place": "Lommel",
+        "rank": 3,
+        "of": 42
+      },
+      {
+        "date": "19 SEP 2025",
+        "quiz": "Internetgazet Quiz",
+        "place": "Lommel",
+        "rank": 7,
+        "of": 33
+      },
+      {
+        "date": "14 AUG 2025",
+        "quiz": "Sporta Quiz",
+        "place": "Westerlo",
+        "rank": 6,
+        "of": 14
+      }
     ],
     "2024/25": [
-      { "date": "— 2025", "quiz": "Archief 2024–2025", "place": "Lommel", "rank": "—", "of": "—", "placeholder": true }
+      {
+        "date": "â 2025",
+        "quiz": "Archief 2024â2025",
+        "place": "Lommel",
+        "rank": "â",
+        "of": "â",
+        "placeholder": true
+      }
     ]
   },
   "leden": [
-    { "name": "Michiel", "role": "De vaste waarde", "bio": "Aanwezig op elke quiz sinds mensenheugenis. Houdt onbewust de naamgeving vol.", "photo": "" },
-    { "name": "Jorik", "role": "Popcultuur & muziek", "bio": "Herkent intro's binnen 0,4 seconden. Is daarna boos als de vraag iets anders blijkt.", "photo": "" },
-    { "name": "Bob", "role": "Geschiedenis & politiek", "bio": "Geeft het juiste antwoord op vragen die niemand gesteld heeft. Drinkt langzaam.", "photo": "" },
-    { "name": "Jensie", "role": "Wetenschap & techniek", "bio": "Twijfelt bij elk antwoord en heeft 9 op 10 keer gelijk. Ondergewaardeerd nationaal erfgoed.", "photo": "" },
-    { "name": "Robin", "role": "Sport & algemeen", "bio": "Schreeuwt antwoorden door. Soms goed. Soms heel niet. Levert sfeer in elk geval.", "photo": "" },
-    { "name": "Het 6e lid", "role": "Roulerende stoel", "bio": "Wisselend gevuld door Nore, Baileyke, Rik, Rosalie of Wouter. Brengt steevast een nieuw perspectief én één onverwacht juist antwoord.", "photo": "" }
+    {
+      "name": "Michiel",
+      "role": "De vaste waarde",
+      "bio": "Aanwezig op elke quiz sinds mensenheugenis. Houdt onbewust de naamgeving vol.",
+      "photo": ""
+    },
+    {
+      "name": "Jorik",
+      "role": "Popcultuur & muziek",
+      "bio": "Herkent intro's binnen 0,4 seconden. Is daarna boos als de vraag iets anders blijkt.",
+      "photo": ""
+    },
+    {
+      "name": "Bob",
+      "role": "Geschiedenis & politiek",
+      "bio": "Geeft het juiste antwoord op vragen die niemand gesteld heeft. Drinkt langzaam.",
+      "photo": ""
+    },
+    {
+      "name": "Jensie",
+      "role": "Wetenschap & techniek",
+      "bio": "Twijfelt bij elk antwoord en heeft 9 op 10 keer gelijk. Ondergewaardeerd nationaal erfgoed.",
+      "photo": ""
+    },
+    {
+      "name": "Robin",
+      "role": "Sport & algemeen",
+      "bio": "Schreeuwt antwoorden door. Soms goed. Soms heel niet. Levert sfeer in elk geval.",
+      "photo": ""
+    },
+    {
+      "name": "Het 6e lid",
+      "role": "Roulerende stoel",
+      "bio": "Wisselend gevuld door Nore, Baileyke, Rik, Rosalie of Wouter. Brengt steevast een nieuw perspectief Ã©n Ã©Ã©n onverwacht juist antwoord.",
+      "photo": ""
+    }
   ],
   "mottos": [
-    { "q": "Wij zijn niet hier om te winnen. Wij zijn hier voor de borrelplank.", "a": "Michiel, openingswoord" },
-    { "q": "Een vierde plaats voelt eigenlijk beter dan een derde. Minder druk volgende keer.", "a": "Bob, na FC Vandenberken" },
-    { "q": "Hadden we maar wat sneller bij de bestelling moeten zijn.", "a": "Elke quiz, ronde 3" },
-    { "q": "We hebben gewonnen. Eén keer. Dat moet genoeg zijn voor een decennium.", "a": "Lovoc, nov. 2025" }
+    {
+      "q": "Wij zijn niet hier om te winnen. Wij zijn hier voor de borrelplank.",
+      "a": "Michiel, openingswoord"
+    },
+    {
+      "q": "Een vierde plaats voelt eigenlijk beter dan een derde. Minder druk volgende keer.",
+      "a": "Bob, na FC Vandenberken"
+    },
+    {
+      "q": "Hadden we maar wat sneller bij de bestelling moeten zijn.",
+      "a": "Elke quiz, ronde 3"
+    },
+    {
+      "q": "We hebben gewonnen. EÃ©n keer. Dat moet genoeg zijn voor een decennium.",
+      "a": "Lovoc, nov. 2025"
+    }
   ],
   "media": [
-    { "bron": "De Lommelse Gazet", "datum": "15.11.2025", "titel": "\"Te Lui Om Te Winnen\" wint dan toch één keer", "quote": "Niemand was meer verbaasd dan zijzelf, getuige de stille reactie aan tafel 7.", "foto": "" },
-    { "bron": "De Lommelse Gazet", "datum": "11.10.2025", "titel": "Lokale ploeg derde bij FC Vandenberken", "quote": "Een knap resultaat, mits de borrelplank vooraf besteld.", "foto": "" },
-    { "bron": "De Lommelse Gazet", "datum": "15.03.2026", "titel": "Klapkwis kent verrassende top tien", "quote": "Met 75 ploegen aan de start wordt vier op vier en zeventig opnieuw bewezen knap.", "foto": "" },
-    { "bron": "De Lommelse Gazet", "datum": "18.04.2026", "titel": "Mèndetquiz: discussie over één antwoord", "quote": "De ploeg gaf na afloop 'geen verdere commentaar' en bestelde een plank.", "foto": "" }
+    {
+      "bron": "De Lommelse Gazet",
+      "datum": "15.11.2025",
+      "titel": "\"Te Lui Om Te Winnen\" wint dan toch Ã©Ã©n keer",
+      "quote": "Niemand was meer verbaasd dan zijzelf, getuige de stille reactie aan tafel 7.",
+      "foto": ""
+    },
+    {
+      "bron": "De Lommelse Gazet",
+      "datum": "11.10.2025",
+      "titel": "Lokale ploeg derde bij FC Vandenberken",
+      "quote": "Een knap resultaat, mits de borrelplank vooraf besteld.",
+      "foto": ""
+    },
+    {
+      "bron": "De Lommelse Gazet",
+      "datum": "15.03.2026",
+      "titel": "Klapkwis kent verrassende top tien",
+      "quote": "Met 75 ploegen aan de start wordt vier op vier en zeventig opnieuw bewezen knap.",
+      "foto": ""
+    },
+    {
+      "bron": "De Lommelse Gazet",
+      "datum": "18.04.2026",
+      "titel": "MÃ¨ndetquiz: discussie over Ã©Ã©n antwoord",
+      "quote": "De ploeg gaf na afloop 'geen verdere commentaar' en bestelde een plank.",
+      "foto": ""
+    }
   ]
 }
