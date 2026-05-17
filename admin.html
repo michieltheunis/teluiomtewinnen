@@ -188,22 +188,33 @@ body { font-family: var(--font); background: var(--bg); color: var(--fg); font-s
   <div class="login-box">
     <div class="login-logo">Te Lui Om Te Winnen · Beheer</div>
     <div class="login-title">Inloggen</div>
-    <div class="login-sub">Vul je wachtwoord en GitHub-token in om door te gaan.</div>
+    <div class="login-sub"></div>
     <div class="field">
       <label>Wachtwoord</label>
       <input type="password" id="pin-input" placeholder="Wachtwoord" autocomplete="current-password" />
     </div>
+    <button class="btn" onclick="doLogin()">Doorgaan →</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
+
+<!-- TOKEN SETUP SCREEN -->
+<div id="token-screen" style="display:none; align-items:center; justify-content:center; min-height:100vh; padding:40px 20px;">
+  <div class="login-box">
+    <div class="login-logo">Te Lui Om Te Winnen · Beheer</div>
+    <div class="login-title">Eénmalige instelling</div>
+    <div class="login-sub">Om wijzigingen op te slaan is een GitHub-koppeling nodig. Dit doe je slechts één keer.</div>
     <div class="field">
       <label>GitHub-token</label>
       <input type="password" id="token-input" placeholder="ghp_..." autocomplete="off" />
       <div class="field-hint">
-        Nog geen token? Ga naar
-        <a href="https://github.com/settings/tokens/new?scopes=repo&description=TLOTW+Beheer" target="_blank">GitHub → Settings → Personal access tokens</a>
-        en maak een token aan met <strong>repo</strong>-rechten.
+        Ga naar
+        <a href="https://github.com/settings/tokens/new?scopes=repo&description=TLOTW+Beheer" target="_blank">github.com → Settings → Personal access tokens → Generate new token (classic)</a>,
+        vink <strong>repo</strong> aan en plak de token hier.
       </div>
     </div>
-    <button class="btn" onclick="doLogin()">Doorgaan →</button>
-    <div class="login-err" id="login-err">Fout PIN of token.</div>
+    <button class="btn" onclick="saveToken()">Verbinden →</button>
+    <div class="login-err" id="token-err"></div>
   </div>
 </div>
 
@@ -226,6 +237,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--fg); font-s
     <div class="topbar-save-wrap">
       <span class="save-status" id="save-status"></span>
       <button class="btn" onclick="saveContent()">Opslaan →</button>
+      <button class="btn secondary small" onclick="resetToken()" title="GitHub-koppeling opnieuw instellen">⚙ Koppeling</button>
       <button class="btn secondary small" onclick="doLogout()">Uitloggen</button>
     </div>
   </div>
@@ -246,7 +258,6 @@ body { font-family: var(--font); background: var(--bg); color: var(--fg); font-s
 const OWNER = 'michieltheunis';
 const REPO  = 'teluiomtewinnen';
 const FILE  = 'content.json';
-// SHA-256 of PIN "2016"
 const PIN_HASH = '50135b86aa124c9cd417fd228f9fdae73d182ad0e0200882426787143c6fcd03';
 
 let content = null;
@@ -255,6 +266,11 @@ let currentTab = 'kalender';
 let currentSeason = null;
 let pendingDelete = null;
 
+function show(id) { document.getElementById(id).style.display = 'flex'; }
+function hide(id) { document.getElementById(id).style.display = 'none'; }
+function showErr(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.style.display = 'block'; }
+function hideErr(id) { document.getElementById(id).style.display = 'none'; }
+
 // ---- Auth ----
 async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -262,32 +278,48 @@ async function sha256(str) {
 }
 
 async function doLogin() {
-  const pin = document.getElementById('pin-input').value;
+  const pw = document.getElementById('pin-input').value;
+  hideErr('login-err');
+  if (!pw) { showErr('login-err', 'Vul je wachtwoord in.'); return; }
+  const hash = await sha256(pw);
+  if (hash !== PIN_HASH) { showErr('login-err', 'Fout wachtwoord.'); return; }
+
+  // Check if token is already stored
+  const saved = localStorage.getItem('tlotw_token');
+  if (saved) {
+    token = saved;
+    await loadContent();
+  } else {
+    hide('login-screen');
+    show('token-screen');
+  }
+}
+
+async function saveToken() {
   const tok = document.getElementById('token-input').value.trim();
-  const err = document.getElementById('login-err');
-  err.style.display = 'none';
-  if (!pin || !tok) { err.textContent = 'Vul alle velden in.'; err.style.display='block'; return; }
-  const hash = await sha256(pin);
-  if (hash !== PIN_HASH) { err.textContent = 'Fout PIN.'; err.style.display='block'; return; }
+  hideErr('token-err');
+  if (!tok) { showErr('token-err', 'Plak je GitHub-token.'); return; }
   token = tok;
   localStorage.setItem('tlotw_token', tok);
+  hide('token-screen');
   await loadContent();
+}
+
+function resetToken() {
+  token = null;
+  localStorage.removeItem('tlotw_token');
+  hide('app');
+  document.getElementById('token-input').value = '';
+  show('token-screen');
 }
 
 function doLogout() {
   token = null;
-  localStorage.removeItem('tlotw_token');
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('app').style.display = 'none';
+  hide('app');
   document.getElementById('pin-input').value = '';
-  document.getElementById('token-input').value = '';
+  hideErr('login-err');
+  show('login-screen');
 }
-
-// Auto-fill token from localStorage
-window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('tlotw_token');
-  if (saved) document.getElementById('token-input').value = saved;
-});
 
 // ---- GitHub API ----
 async function ghGet() {
