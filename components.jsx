@@ -2,20 +2,25 @@
 const { useState, useEffect, useRef } = React;
 
 // ----- Reveal hook -----
-function useReveal() {
+// `ready` dependency ensures observers are set up AFTER content loads and renders
+function useReveal(ready) {
   useEffect(() => {
-    const els = document.querySelectorAll(".reveal, .reveal-stagger");
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (e.isIntersecting) {
-          e.target.classList.add("in");
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: "0px 0px -60px 0px" });
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
+    if (!ready) return;
+    let io;
+    const frame = requestAnimationFrame(() => {
+      const els = document.querySelectorAll(".reveal, .reveal-stagger");
+      io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -60px 0px" });
+      els.forEach((el) => io.observe(el));
+    });
+    return () => { cancelAnimationFrame(frame); if (io) io.disconnect(); };
+  }, [ready]);
 }
 
 // ----- Scroll progress -----

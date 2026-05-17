@@ -302,7 +302,8 @@ async function loadContent() {
   setStatus('Laden…', '');
   try {
     const file = await ghGet();
-    content = JSON.parse(atob(file.content.replace(/\n/g,'')));
+    const bytes = Uint8Array.from(atob(file.content.replace(/\n/g,'')), c => c.charCodeAt(0));
+    content = JSON.parse(new TextDecoder('utf-8').decode(bytes));
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').style.display = 'flex';
     if (content.uitslagen) currentSeason = Object.keys(content.uitslagen)[0];

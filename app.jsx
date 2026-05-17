@@ -15,7 +15,7 @@ function App() {
   const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [content, setContent] = useStateApp(null);
 
-  useReveal();
+  useReveal(!!content);
 
   useEffectApp(() => {
     document.body.dataset.mode = tweaks.mode;
