@@ -403,6 +403,7 @@ function renderKalender() {
         <div class="item-row-sub">${esc(k.where)} · ${esc((k.ploeg||[]).join(', '))}</div>
       </div>
       <div class="item-row-actions">
+        <button class="btn small" onclick="openUitslag(${i})" title="Uitslag ingeven en quiz verplaatsen naar uitslagen">✓ Uitslag</button>
         <button class="btn secondary small" onclick="editKal(${i})">Bewerken</button>
         <button class="btn danger small" onclick="deleteKal(${i})">✕</button>
       </div>
@@ -411,10 +412,61 @@ function renderKalender() {
   });
   return `
     <div class="section-title">Kalender</div>
-    <div class="section-sub">Komende quizzen beheren. Gebruik "?" voor onbevestigde deelnemers.</div>
+    <div class="section-sub">Komende quizzen beheren. Klik "✓ Uitslag" om een result in te geven — de quiz verdwijnt dan automatisch van de kalender.</div>
     <div class="item-list">${rows}</div>
     <button class="add-btn" onclick="addKal()">+ Quiz toevoegen</button>
     <div id="kal-add-form"></div>`;
+}
+
+function openUitslag(i) {
+  // Close any other open forms first
+  document.querySelectorAll('[id^="kal-form-"]').forEach(el => { el.style.display='none'; el.innerHTML=''; });
+  const k = content.kalender[i];
+  const seasons = Object.keys(content.uitslagen || {});
+  const seasonOpts = seasons.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join('');
+  const el = document.getElementById('kal-form-'+i);
+  el.style.display = 'block';
+  el.innerHTML = `<div class="edit-form" style="border-left:3px solid var(--orange)">
+    <div class="edit-form-title">✓ Uitslag ingeven — ${esc(k.quiz)} (${esc(k.d)} ${esc(k.m)})</div>
+    <div class="form-grid">
+      ${field('uit-kal-rank','Eindstand (plaats)',''  ,{placeholder:'3'})}
+      ${field('uit-kal-of'  ,'Totaal ploegen'   ,''  ,{placeholder:'42'})}
+      <div class="field"><label>Seizoen</label><select id="uit-kal-season" style="background:var(--bg3);border:1px solid var(--border-strong);color:var(--fg);font-family:var(--font);font-size:15px;padding:11px 14px">${seasonOpts}</select></div>
+    </div>
+    ${field('uit-kal-youth','Beste jongerenploeg',false,{type:'checkbox'})}
+    <div class="form-actions">
+      <button class="btn" onclick="saveUitslag(${i})">Opslaan & van kalender verwijderen</button>
+      <button class="btn secondary" onclick="cancelUitslag(${i})">Annuleren</button>
+    </div>
+  </div>`;
+}
+
+function cancelUitslag(i) {
+  const el = document.getElementById('kal-form-'+i);
+  el.style.display = 'none'; el.innerHTML = '';
+}
+
+function saveUitslag(i) {
+  const k = content.kalender[i];
+  const rank = getVal('uit-kal-rank');
+  const of   = getVal('uit-kal-of');
+  const season = getVal('uit-kal-season');
+  const youth  = getVal('uit-kal-youth');
+
+  const result = {
+    date: `${k.d} ${k.m} 2026`,
+    quiz: k.quiz,
+    place: k.where,
+    rank: isNaN(rank) || rank === '' ? rank : Number(rank),
+    of:   isNaN(of)   || of   === '' ? of   : Number(of)
+  };
+  if (youth) result.youthWin = true;
+
+  if (!content.uitslagen[season]) content.uitslagen[season] = [];
+  content.uitslagen[season].unshift(result);
+  content.kalender.splice(i, 1);
+  currentSeason = season;
+  renderTab();
 }
 
 function editKal(i) {
