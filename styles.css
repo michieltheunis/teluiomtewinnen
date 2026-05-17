@@ -204,10 +204,11 @@ body[data-mode="warm"] .nav-logo img {
 .nav-burger:hover { background: color-mix(in oklab, var(--orange) 12%, transparent); }
 .nav-burger span {
   display: block;
-  width: 20px;
-  height: 1.5px;
-  background: var(--ink);
+  width: 22px;
+  height: 2px;
+  background: var(--teal-ink);
   border-radius: 1px;
+  flex-shrink: 0;
   transition: transform 0.3s ease, opacity 0.2s ease;
 }
 .nav-burger.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
