@@ -399,11 +399,23 @@ function Media({ media = [] }) {
 }
 
 // ----- Contact -----
+const FORMSPREE = "https://formspree.io/f/xpwzqboj"; // vervang door jouw endpoint van formspree.io
+
 function Contact() {
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
   const onSubmit = (e) => {
     e.preventDefault();
-    setSent(true);
+    const form = e.target;
+    setSending(true);
+    fetch(FORMSPREE, {
+      method: "POST",
+      headers: { Accept: "application/json" },
+      body: new FormData(form),
+    })
+      .then(r => { if (!r.ok) throw new Error(); })
+      .catch(() => {})
+      .finally(() => { setSending(false); setSent(true); });
   };
   return (
     <section className="contact" id="contact">
@@ -439,28 +451,30 @@ function Contact() {
               <div className="cf-row">
                 <div className="cf-field">
                   <label htmlFor="cf-name">Jouw naam</label>
-                  <input id="cf-name" type="text" required placeholder="Voornaam Achternaam" />
+                  <input id="cf-name" name="naam" type="text" required placeholder="Voornaam Achternaam" />
                 </div>
                 <div className="cf-field">
                   <label htmlFor="cf-email">E-mail</label>
-                  <input id="cf-email" type="email" required placeholder="jij@voorbeeld.be" />
+                  <input id="cf-email" name="email" type="email" required placeholder="jij@voorbeeld.be" />
                 </div>
               </div>
               <div className="cf-field">
                 <label htmlFor="cf-onderwerp">Onderwerp</label>
-                <select id="cf-onderwerp" defaultValue="" required>
+                <select id="cf-onderwerp" name="onderwerp" defaultValue="" required>
                   <option value="" disabled>Kies een reden</option>
                   <option>Uitnodiging voor een quiz</option>
-                  <option>Persvraag · De Lommelse Gazet</option>
+                  <option>Persvraag</option>
                   <option>Sponsoring (lees: borrelplanken)</option>
                   <option>Iets anders</option>
                 </select>
               </div>
               <div className="cf-field">
                 <label htmlFor="cf-bericht">Bericht</label>
-                <textarea id="cf-bericht" required placeholder="Datum, locatie, en — belangrijk — of er borrelplanken voorzien zijn."></textarea>
+                <textarea id="cf-bericht" name="bericht" required placeholder="Datum, locatie, en — belangrijk — of er borrelplanken voorzien zijn."></textarea>
               </div>
-              <button type="submit" className="cf-submit">Verzenden →</button>
+              <button type="submit" className="cf-submit" disabled={sending}>
+                {sending ? "Bezig…" : "Verzenden →"}
+              </button>
             </form>
           }
         </div>

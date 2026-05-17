@@ -188,10 +188,10 @@ body { font-family: var(--font); background: var(--bg); color: var(--fg); font-s
   <div class="login-box">
     <div class="login-logo">Te Lui Om Te Winnen · Beheer</div>
     <div class="login-title">Inloggen</div>
-    <div class="login-sub">Vul je PIN en je GitHub-token in om door te gaan.</div>
+    <div class="login-sub">Vul je wachtwoord en GitHub-token in om door te gaan.</div>
     <div class="field">
-      <label>PIN</label>
-      <input type="password" id="pin-input" placeholder="••••" maxlength="20" />
+      <label>Wachtwoord</label>
+      <input type="password" id="pin-input" placeholder="Wachtwoord" autocomplete="current-password" />
     </div>
     <div class="field">
       <label>GitHub-token</label>
@@ -247,7 +247,7 @@ const OWNER = 'michieltheunis';
 const REPO  = 'teluiomtewinnen';
 const FILE  = 'content.json';
 // SHA-256 of PIN "2016"
-const PIN_HASH = 'da6e2f539726fabd1f8cd7c9469a22b36769137975b28abc65fe2dc29e659b77';
+const PIN_HASH = '50135b86aa124c9cd417fd228f9fdae73d182ad0e0200882426787143c6fcd03';
 
 let content = null;
 let token   = null;
