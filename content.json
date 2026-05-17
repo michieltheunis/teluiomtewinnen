@@ -1,34 +1,6 @@
 {
   "kalender": [
     {
-      "d": "08",
-      "m": "MEI",
-      "quiz": "Quiztion",
-      "where": "Lommel",
-      "ploeg": [
-        "Michiel",
-        "Jorik",
-        "Nore",
-        "Baileyke",
-        "Rik",
-        "Rosalie"
-      ]
-    },
-    {
-      "d": "15",
-      "m": "MEI",
-      "quiz": "Bruudruusterquiz",
-      "where": "Lommel",
-      "ploeg": [
-        "Michiel",
-        "Robin",
-        "Jorik",
-        "Jensie",
-        "Baileyke",
-        "Wouter"
-      ]
-    },
-    {
       "d": "18",
       "m": "SEP",
       "quiz": "Geknipte Lommelse Gazet Quiz",
@@ -74,6 +46,20 @@
   "uitslagen": {
     "2025/26": [
       {
+        "date": "15 MEI 2026",
+        "quiz": "Bruudruusterquiz",
+        "place": "Lommel",
+        "rank": 10,
+        "of": 62
+      },
+      {
+        "date": "08 MEI 2026",
+        "quiz": "Quiztion",
+        "place": "Lommel",
+        "rank": 3,
+        "of": 45
+      },
+      {
         "date": "24 APR 2026",
         "quiz": "Die van os quiz",
         "place": "Lommel",
@@ -82,7 +68,7 @@
       },
       {
         "date": "17 APR 2026",
-        "quiz": "MÃ¨ndetquiz",
+        "quiz": "MÃÂ¨ndetquiz",
         "place": "Lommel",
         "rank": 5,
         "of": 37,
@@ -140,11 +126,11 @@
     ],
     "2024/25": [
       {
-        "date": "â 2025",
-        "quiz": "Archief 2024â2025",
+        "date": "Ã¢ÂÂ 2025",
+        "quiz": "Archief 2024Ã¢ÂÂ2025",
         "place": "Lommel",
-        "rank": "â",
-        "of": "â",
+        "rank": "Ã¢ÂÂ",
+        "of": "Ã¢ÂÂ",
         "placeholder": true
       }
     ]
@@ -183,7 +169,7 @@
     {
       "name": "Het 6e lid",
       "role": "Roulerende stoel",
-      "bio": "Wisselend gevuld door Nore, Baileyke, Rik, Rosalie of Wouter. Brengt steevast een nieuw perspectief Ã©n Ã©Ã©n onverwacht juist antwoord.",
+      "bio": "Wisselend gevuld door Nore, Baileyke, Rik, Rosalie of Wouter. Brengt steevast een nieuw perspectief ÃÂ©n ÃÂ©ÃÂ©n onverwacht juist antwoord.",
       "photo": ""
     }
   ],
@@ -201,7 +187,7 @@
       "a": "Elke quiz, ronde 3"
     },
     {
-      "q": "We hebben gewonnen. EÃ©n keer. Dat moet genoeg zijn voor een decennium.",
+      "q": "We hebben gewonnen. EÃÂ©n keer. Dat moet genoeg zijn voor een decennium.",
       "a": "Lovoc, nov. 2025"
     }
   ],
@@ -209,7 +195,7 @@
     {
       "bron": "De Lommelse Gazet",
       "datum": "15.11.2025",
-      "titel": "\"Te Lui Om Te Winnen\" wint dan toch Ã©Ã©n keer",
+      "titel": "\"Te Lui Om Te Winnen\" wint dan toch ÃÂ©ÃÂ©n keer",
       "quote": "Niemand was meer verbaasd dan zijzelf, getuige de stille reactie aan tafel 7.",
       "foto": ""
     },
@@ -230,7 +216,7 @@
     {
       "bron": "De Lommelse Gazet",
       "datum": "18.04.2026",
-      "titel": "MÃ¨ndetquiz: discussie over Ã©Ã©n antwoord",
+      "titel": "MÃÂ¨ndetquiz: discussie over ÃÂ©ÃÂ©n antwoord",
       "quote": "De ploeg gaf na afloop 'geen verdere commentaar' en bestelde een plank.",
       "foto": ""
     }
