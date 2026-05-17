@@ -126,12 +126,99 @@
     ],
     "2024/25": [
       {
-        "date": "— 2025",
-        "quiz": "Archief 2024–2025",
+        "date": "23 MEI 2025",
+        "quiz": "Mèndetquiz",
         "place": "Lommel",
-        "rank": "—",
-        "of": "—",
-        "placeholder": true
+        "rank": 4,
+        "of": 37,
+        "youthWin": true
+      },
+      {
+        "date": "28 MRT 2025",
+        "quiz": "CoeQuiz",
+        "place": "Lommel",
+        "rank": 5,
+        "of": 38
+      },
+      {
+        "date": "21 MRT 2025",
+        "quiz": "Eigenwijze Quiz",
+        "place": "Lommel",
+        "rank": 4,
+        "of": 12
+      },
+      {
+        "date": "1 MRT 2025",
+        "quiz": "Blauwvoetersquiz",
+        "place": "Lommel",
+        "rank": 3,
+        "of": 45
+      },
+      {
+        "date": "21 FEB 2025",
+        "quiz": "Klapkwis",
+        "place": "Lommel",
+        "rank": 4,
+        "of": 74
+      },
+      {
+        "date": "14 FEB 2025",
+        "quiz": "Leopolquiz",
+        "place": "Lommel",
+        "rank": 5,
+        "of": 46
+      },
+      {
+        "date": "25 OKT 2024",
+        "quiz": "Lovoc Quiz",
+        "place": "Lommel",
+        "rank": 20,
+        "of": 42
+      },
+      {
+        "date": "19 OKT 2024",
+        "quiz": "Thebaquiz",
+        "place": "Lommel",
+        "rank": 3,
+        "of": 22
+      }
+    ],
+    "2023/24": [
+      {
+        "date": "12 APR 2024",
+        "quiz": "Mèndetquiz",
+        "place": "Lommel",
+        "rank": 10,
+        "of": 45,
+        "youthWin": true
+      },
+      {
+        "date": "22 MRT 2024",
+        "quiz": "Quiz Spinfit",
+        "place": "Dessel",
+        "rank": 7,
+        "of": 23
+      },
+      {
+        "date": "16 MRT 2025",
+        "quiz": "Klapkwis",
+        "place": "Lommel",
+        "rank": 16,
+        "of": 74
+      },
+      {
+        "date": "17 FEB 2024",
+        "quiz": "Jezus Quiztus",
+        "place": "Lommel",
+        "rank": 5,
+        "of": 20
+      },
+      {
+        "date": "9 FEB 2024",
+        "quiz": "Leopolquiz",
+        "place": "Lommel",
+        "rank": 4,
+        "of": 44
       }
     ]
   },
