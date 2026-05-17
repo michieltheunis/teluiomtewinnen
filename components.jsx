@@ -1,6 +1,16 @@
 // Components for Te Lui Om Te Winnen onepager
 const { useState, useEffect, useRef } = React;
 
+// Converts *word* → <em>word</em> and \n → <br/>
+function parseText(str) {
+  if (!str) return null;
+  return String(str).split('\n').flatMap((line, li) => {
+    const parts = line.split('*');
+    const nodes = parts.map((p, i) => i % 2 === 1 ? <em key={`${li}-${i}`}>{p}</em> : p);
+    return li > 0 ? [<br key={`br${li}`} />, ...nodes] : nodes;
+  });
+}
+
 // ----- Reveal hook -----
 // `ready` dependency ensures observers are set up AFTER content loads and renders
 function useReveal(ready) {
@@ -101,7 +111,8 @@ function Nav() {
 }
 
 // ----- Hero -----
-function Hero({ uitslagen, kalender }) {
+function Hero({ uitslagen, kalender, teksten = {} }) {
+  const t = teksten.hero || {};
   const seizoen = uitslagen ? Object.keys(uitslagen)[0] : null;
   const rows = seizoen ? (uitslagen[seizoen] || []).filter(r => !r.placeholder) : [];
   const volgende = kalender && kalender[0];
@@ -113,15 +124,15 @@ function Hero({ uitslagen, kalender }) {
       <div className="shell">
         <div className="hero-grid reveal-stagger">
           <h1 className="hero-statement">
-            Te lui<br />om te <em>winnen.</em>
+            {parseText(t.statement || 'Te lui\nom te *winnen.*')}
           </h1>
           <div className="hero-side">
             <p className="hero-tagline">
-              Vijf vaste leden. Tien quizzen per jaar. Eén onuitgesproken pact: nooit te vroeg de borrelplank bestellen.
+              {t.tagline || 'Vijf vaste leden. Tien quizzen per jaar. Eén onuitgesproken pact: nooit te vroeg de borrelplank bestellen.'}
             </p>
             <div className="hero-quote">
-              "Als je niet wint, voelt elke vierde plaats nog vrij comfortabel."
-              <span className="hero-quote-attr">— ongeschreven huishoudelijk reglement</span>
+              "{t.quote || 'Als je niet wint, voelt elke vierde plaats nog vrij comfortabel.'}"
+              <span className="hero-quote-attr">{t.quoteAttr || '— ongeschreven huishoudelijk reglement'}</span>
             </div>
           </div>
         </div>
@@ -149,25 +160,24 @@ function Hero({ uitslagen, kalender }) {
 }
 
 // ----- About -----
-function About() {
+function About({ teksten = {} }) {
+  const t = teksten.over || {};
   return (
     <section className="section" id="over">
       <div className="shell">
         <div className="section-head reveal">
           <div className="meta">
-            <div className="section-num">Over ons</div>
+            <div className="section-num">{t.eyebrow || 'Over ons'}</div>
           </div>
-          <h2>Een quizploeg met <em>verdacht weinig</em> ambitie.</h2>
+          <h2>{parseText(t.heading || 'Een quizploeg met *verdacht weinig* ambitie.')}</h2>
         </div>
         <div className="about reveal-stagger">
           <div>
-            <p className="about-lead">
-              Wij zijn <em>Te Lui Om Te Winnen.</em> Een vijftal vaste leden uit Lommel die al ongeveer tien jaar quizzen en zich onderscheiden door een opvallende specialiteit: borrelplanken bestellen op het moment dat ze net uitverkocht zijn.
-            </p>
+            <p className="about-lead">{parseText(t.lead || 'Wij zijn *Te Lui Om Te Winnen.* Een vijftal vaste leden uit Lommel die al ongeveer tien jaar quizzen en zich onderscheiden door een opvallende specialiteit: borrelplanken bestellen op het moment dat ze net uitverkocht zijn.')}</p>
             <div className="about-body">
-              <p>We doen mee aan zo'n tien quizzen per jaar in en rond Lommel. Onze sterke vakgebieden? Daar zijn we zelf nog niet uit. Onze zwakke vakgebieden? Onbekend, maar legio.</p>
-              <p>We zijn niet de luidste ploeg. Niet de strakste. Niet de snelste met het opheffen van de hand. Maar als de jury de laatste kruisjes zet en wij eindigen ergens tussen plek 4 en 7 — dan was het een goede avond.</p>
-              <p>We hebben één keer gewonnen. Dat blijft voorlopig genoeg.</p>
+              <p>{t.body1 || 'We doen mee aan zo\'n tien quizzen per jaar in en rond Lommel. Onze sterke vakgebieden? Daar zijn we zelf nog niet uit. Onze zwakke vakgebieden? Onbekend, maar legio.'}</p>
+              <p>{t.body2 || 'We zijn niet de luidste ploeg. Niet de strakste. Niet de snelste met het opheffen van de hand. Maar als de jury de laatste kruisjes zet en wij eindigen ergens tussen plek 4 en 7 — dan was het een goede avond.'}</p>
+              <p>{t.body3 || 'We hebben één keer gewonnen. Dat blijft voorlopig genoeg.'}</p>
             </div>
           </div>
           <div className="about-stats-wrap">
@@ -184,15 +194,16 @@ function About() {
 }
 
 // ----- Mottos -----
-function Mottos({ mottos = [] }) {
+function Mottos({ mottos = [], teksten = {} }) {
+  const t = teksten.leuzen || {};
   return (
     <section className="mottos" id="leuzen">
       <div className="shell">
         <div className="section-head reveal" style={{ borderColor: "var(--panel-rule)" }}>
           <div className="meta">
-            <div className="section-num" style={{ color: "var(--orange)", opacity: 1 }}>Leuzen</div>
+            <div className="section-num" style={{ color: "var(--orange)", opacity: 1 }}>{t.eyebrow || 'Leuzen'}</div>
           </div>
-          <h2 style={{ color: "var(--panel-fg)" }}>Onuitgesproken <em>regels</em>, <br/>luidop herhaald.</h2>
+          <h2 style={{ color: "var(--panel-fg)" }}>{parseText(t.heading || 'Onuitgesproken *regels*,\nluidop herhaald.')}</h2>
         </div>
         <div className="motto-list reveal-stagger">
           {mottos.map((m, i) =>
@@ -214,12 +225,19 @@ function EigenQuizBanner({ eq }) {
   return (
     <section className="eigen-quiz-banner reveal">
       <div className="shell">
-        <div className="eqb-inner">
-          <div className="eqb-label">Eigen quiz · {eq.datum}</div>
-          <div className="eqb-titel">{eq.titel}</div>
-          {meta && <div className="eqb-meta">{meta}</div>}
-          {eq.beschrijving && <div className="eqb-desc">{eq.beschrijving}</div>}
-          {eq.link && <a className="eqb-link" href={eq.link} target="_blank" rel="noopener">Meer info →</a>}
+        <div className={"eqb-inner" + (eq.afbeelding ? " eqb-has-img" : "")}>
+          <div className="eqb-text">
+            <div className="eqb-label">Eigen quiz · {eq.datum}</div>
+            <div className="eqb-titel">{eq.titel}</div>
+            {meta && <div className="eqb-meta">{meta}</div>}
+            {eq.beschrijving && <div className="eqb-desc">{eq.beschrijving}</div>}
+            {eq.link && <a className="eqb-link" href={eq.link} target="_blank" rel="noopener">Meer info →</a>}
+          </div>
+          {eq.afbeelding && (
+            <div className="eqb-poster">
+              <img src={eq.afbeelding} alt={eq.titel} />
+            </div>
+          )}
         </div>
       </div>
     </section>
@@ -227,50 +245,62 @@ function EigenQuizBanner({ eq }) {
 }
 
 // ----- Kalender -----
-function Kalender({ kalender = [], eigenQuiz }) {
-  const eq = eigenQuiz && eigenQuiz.active ? eigenQuiz : null;
+const MAAND_ORDER = {JAN:1,FEB:2,MRT:3,APR:4,MEI:5,JUN:6,JUL:7,AUG:8,SEP:9,OKT:10,NOV:11,DEC:12};
+
+function Kalender({ kalender = [], eigenQuiz, teksten = {} }) {
+  const t = teksten.kalender || {};
+
+  // Merge eigenQuiz into kalender list and sort chronologically
+  const items = kalender.map(k => ({ ...k, isHost: false }));
+  if (eigenQuiz?.active && eigenQuiz.d && eigenQuiz.m) {
+    items.push({
+      d: eigenQuiz.d, m: eigenQuiz.m,
+      quiz: eigenQuiz.titel,
+      where: eigenQuiz.link ? null : eigenQuiz.locatie,
+      ploeg: [eigenQuiz.locatie, eigenQuiz.tijd].filter(Boolean),
+      isHost: true, _eq: eigenQuiz
+    });
+  }
+  items.sort((a, b) => {
+    const ma = MAAND_ORDER[a.m] || 0, mb = MAAND_ORDER[b.m] || 0;
+    return ma !== mb ? ma - mb : parseInt(a.d) - parseInt(b.d);
+  });
+
   return (
     <section className="section" id="kalender">
       <div className="shell">
         <div className="section-head reveal">
           <div className="meta">
-            <div className="section-num">Kalender 2026</div>
+            <div className="section-num">{t.eyebrow || 'Kalender 2026'}</div>
           </div>
-          <h2>Wat staat er <em>nog</em> op de planning.</h2>
+          <h2>{parseText(t.heading || 'Wat staat er *nog* op de planning.')}</h2>
         </div>
-        {eq && (
-          <div className="kal-row kal-host reveal">
-            <div className="kal-date">
-              <div className="date-d">{eq.datum.replace(/\D+(\d+)\D+/, '$1') || '13'}</div>
-              <span className="date-m">NOV '25</span>
-            </div>
-            <div className="kal-main">
-              <div className="kal-host-badge">WIJ ORGANISEREN</div>
-              <div className="name">{eq.titel}</div>
-              <div className="ploeg">{[eq.locatie, eq.tijd].filter(Boolean).join(' · ') || eq.datum}</div>
-            </div>
-            {eq.link && <a className="kal-host-link where" href={eq.link} target="_blank" rel="noopener">Info →</a>}
-          </div>
-        )}
         <div className="kalender-list reveal-stagger">
-          {kalender.map((k, i) =>
-            <div className="kal-row" key={i}>
+          {items.map((k, i) =>
+            <div className={"kal-row" + (k.isHost ? " kal-host" : "")} key={i}>
               <div className="kal-date">
                 <div className="date-d">{k.d}</div>
-                <span className="date-m">{k.m} '26</span>
+                <span className="date-m">{k.m} '{k.isHost ? '25' : '26'}</span>
               </div>
               <div className="kal-main">
+                {k.isHost && <div className="kal-host-badge">WIJ ORGANISEREN</div>}
                 <div className="name">{k.quiz}</div>
                 <div className="ploeg">
-                  {(k.ploeg || []).map((p, idx) =>
-                    <React.Fragment key={idx}>
-                      {idx > 0 && " · "}
-                      {p === "?" ? <span className="qmark">?</span> : p}
-                    </React.Fragment>
-                  )}
+                  {k.isHost
+                    ? (k.ploeg.join(' · ') || k._eq.datum)
+                    : (k.ploeg || []).map((p, idx) =>
+                        <React.Fragment key={idx}>
+                          {idx > 0 && " · "}
+                          {p === "?" ? <span className="qmark">?</span> : p}
+                        </React.Fragment>
+                      )
+                  }
                 </div>
               </div>
-              <div className="where">{k.where}</div>
+              {k.isHost && k._eq.link
+                ? <a className="kal-host-link where" href={k._eq.link} target="_blank" rel="noopener">Info →</a>
+                : <div className="where">{k.where}</div>
+              }
             </div>
           )}
         </div>
@@ -279,7 +309,8 @@ function Kalender({ kalender = [], eigenQuiz }) {
 }
 
 // ----- Uitslagen -----
-function Uitslagen({ uitslagen = {} }) {
+function Uitslagen({ uitslagen = {}, teksten = {} }) {
+  const t = teksten.uitslagen || {};
   const seasons = Object.keys(uitslagen);
   const [season, setSeason] = useState(seasons[0] || "2025/26");
   const rows = uitslagen[season] || [];
@@ -298,9 +329,9 @@ function Uitslagen({ uitslagen = {} }) {
       <div className="shell">
         <div className="section-head reveal">
           <div className="meta">
-            <div className="section-num">Palmares</div>
+            <div className="section-num">{t.eyebrow || 'Palmares'}</div>
           </div>
-          <h2>De koude, harde, <em>bescheiden</em> cijfers.</h2>
+          <h2>{parseText(t.heading || 'De koude, harde, *bescheiden* cijfers.')}</h2>
         </div>
         <div className="reveal season-tabs-wrap">
           <div className="season-tabs-scroll">
@@ -372,15 +403,16 @@ function Uitslagen({ uitslagen = {} }) {
 }
 
 // ----- Leden -----
-function Leden({ leden = [] }) {
+function Leden({ leden = [], teksten = {} }) {
+  const t = teksten.leden || {};
   return (
     <section className="section" id="leden">
       <div className="shell">
         <div className="section-head reveal">
           <div className="meta">
-            <div className="section-num">De ploeg</div>
+            <div className="section-num">{t.eyebrow || 'De ploeg'}</div>
           </div>
-          <h2>Zes mensen. <em>Eén</em> tafel.</h2>
+          <h2>{parseText(t.heading || 'Zes mensen. *Eén* tafel.')}</h2>
         </div>
         <div className="leden-grid reveal-stagger">
           {leden.map((l, i) =>
@@ -402,16 +434,17 @@ function Leden({ leden = [] }) {
 }
 
 // ----- Media -----
-function Media({ media = [] }) {
+function Media({ media = [], teksten = {} }) {
+  const t = teksten.media || {};
   const spans = ["span-7", "span-5", "span-6", "span-6"];
   return (
     <section className="section" id="media" style={{ background: "var(--bone)" }}>
       <div className="shell">
         <div className="section-head reveal">
           <div className="meta">
-            <div className="section-num">In de pers</div>
+            <div className="section-num">{t.eyebrow || 'In de pers'}</div>
           </div>
-          <h2>Vermeld in <em>De Lommelse Gazet.</em></h2>
+          <h2>{parseText(t.heading || 'Vermeld in *De Lommelse Gazet.*')}</h2>
         </div>
         <div className="media-grid reveal-stagger">
           {media.map((clip, i) =>
@@ -425,6 +458,7 @@ function Media({ media = [] }) {
               </div>
               <h3 className="clip-headline">{clip.titel}</h3>
               <p className="clip-quote">"{clip.quote}"</p>
+              {clip.url && <a className="clip-link" href={clip.url} target="_blank" rel="noopener">Lees artikel →</a>}
             </article>
           )}
         </div>
@@ -438,7 +472,9 @@ function Media({ media = [] }) {
 // ----- Contact -----
 const FORMSPREE = "https://formspree.io/f/xpqnabpq";
 
-function Contact() {
+function Contact({ teksten = {} }) {
+  const t = teksten.contact || {};
+  const email = t.email || 'info@teluiomtewinnen.be';
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const onSubmit = (e) => {
@@ -459,22 +495,19 @@ function Contact() {
       <div className="shell">
         <div className="reveal">
           <div style={{ fontFamily: "var(--font-mono)", fontSize: "11px", letterSpacing: "0.18em", color: "var(--orange)", marginBottom: "32px" }}>Contact</div>
-          <h2 className="contact-h">
-            Quiz te <em>verdedigen?</em><br />
-            We denken erover na.
-          </h2>
+          <h2 className="contact-h">{parseText(t.heading || 'Quiz te *verdedigen?*\nWe denken erover na.')}</h2>
           <div className="contact-meta reveal-stagger" style={{ marginTop: "40px" }}>
             <div className="row">
               <span className="k">EMAIL</span>
-              <span className="v"><a href="mailto:info@teluiomtewinnen.be">info@teluiomtewinnen.be</a></span>
+              <span className="v"><a href={`mailto:${email}`}>{email}</a></span>
             </div>
             <div className="row">
               <span className="k">BASIS</span>
-              <span className="v">Lommel, België</span>
+              <span className="v">{t.locatie || 'Lommel, België'}</span>
             </div>
             <div className="row">
               <span className="k">VOORWAARDE</span>
-              <span className="v">Borrelplank verzekerd</span>
+              <span className="v">{t.voorwaarde || 'Borrelplank verzekerd'}</span>
             </div>
           </div>
         </div>

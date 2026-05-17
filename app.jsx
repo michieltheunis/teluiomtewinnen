@@ -45,15 +45,15 @@ function App() {
     <>
       {tweaks.showProgress && <ScrollProgress />}
       <Nav />
-      <Hero uitslagen={content.uitslagen} kalender={content.kalender} />
+      <Hero uitslagen={content.uitslagen} kalender={content.kalender} teksten={content.teksten} />
       {content.eigenQuiz?.active && <EigenQuizBanner eq={content.eigenQuiz} />}
-      <About />
-      {tweaks.showMottos && <Mottos mottos={content.mottos} />}
-      <Uitslagen uitslagen={content.uitslagen} />
-      <Kalender kalender={content.kalender} eigenQuiz={content.eigenQuiz} />
-      <Leden leden={content.leden} />
-      {tweaks.showMedia && <Media media={content.media} />}
-      <Contact />
+      <About teksten={content.teksten} />
+      {tweaks.showMottos && <Mottos mottos={content.mottos} teksten={content.teksten} />}
+      <Uitslagen uitslagen={content.uitslagen} teksten={content.teksten} />
+      <Kalender kalender={content.kalender} eigenQuiz={content.eigenQuiz} teksten={content.teksten} />
+      <Leden leden={content.leden} teksten={content.teksten} />
+      {tweaks.showMedia && <Media media={content.media} teksten={content.teksten} />}
+      <Contact teksten={content.teksten} />
       <Footer />
 
       <TweaksPanel title="Tweaks">

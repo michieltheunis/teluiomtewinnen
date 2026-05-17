@@ -249,6 +249,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--fg); font-s
     <button class="tab" onclick="switchTab('mottos', this)">Motto's</button>
     <button class="tab" onclick="switchTab('media', this)">Persartikelen</button>
     <button class="tab" onclick="switchTab('eigenquiz', this)">Eigen quiz</button>
+    <button class="tab" onclick="switchTab('teksten', this)">Teksten</button>
   </div>
 
   <div class="content" id="content-area"></div>
@@ -327,7 +328,17 @@ async function ghGet() {
   const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}`, {
     headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }
   });
-  if (!r.ok) throw new Error('Kon content niet ophalen (status ' + r.status + '). Controleer je token.');
+  if (r.status === 401 || r.status === 403) {
+    token = null;
+    localStorage.removeItem('tlotw_token');
+    hide('login-screen');
+    hide('app');
+    document.getElementById('token-input').value = '';
+    showErr('token-err', 'Token verlopen of ongeldig. Voer een nieuw token in.');
+    show('token-screen');
+    throw new Error('token_expired');
+  }
+  if (!r.ok) throw new Error('Kon content niet ophalen (status ' + r.status + ').');
   return r.json();
 }
 
@@ -343,6 +354,7 @@ async function loadContent() {
     renderTab();
     setStatus('', '');
   } catch(e) {
+    if (e.message === 'token_expired') return;
     document.getElementById('login-err').textContent = e.message;
     document.getElementById('login-err').style.display = 'block';
   }
@@ -392,6 +404,7 @@ function renderTab() {
   else if (currentTab === 'mottos') area.innerHTML = renderMottos();
   else if (currentTab === 'media') area.innerHTML = renderMedia();
   else if (currentTab === 'eigenquiz') area.innerHTML = renderEigenQuiz();
+  else if (currentTab === 'teksten') area.innerHTML = renderTeksten();
 }
 
 // ---- Confirm dialog ----
@@ -814,6 +827,7 @@ function clipForm(pfx, c, onSave, onCancel) {
     ${field(pfx+'-titel','Titel',c.titel)}
     ${field(pfx+'-quote','Citaat / samenvatting',c.quote,{type:'textarea'})}
     ${field(pfx+'-foto','Foto-URL (optioneel)',c.foto||'',{placeholder:'https://...jpg',hint:'Publieke URL van een afbeelding van het artikel.'})}
+    ${field(pfx+'-url','Link naar origineel artikel (optioneel)',c.url||'',{placeholder:'https://delommelsgazet.be/...'})}
     <div class="form-actions">
       <button class="btn" onclick="${onSave}">Opslaan</button>
       <button class="btn secondary" onclick="${onCancel}">Annuleren</button>
@@ -821,7 +835,7 @@ function clipForm(pfx, c, onSave, onCancel) {
   </div>`;
 }
 function readClipForm(pfx) {
-  return { bron: getVal(pfx+'-bron'), datum: getVal(pfx+'-datum'), titel: getVal(pfx+'-titel'), quote: getVal(pfx+'-quote'), foto: getVal(pfx+'-foto') };
+  return { bron: getVal(pfx+'-bron'), datum: getVal(pfx+'-datum'), titel: getVal(pfx+'-titel'), quote: getVal(pfx+'-quote'), foto: getVal(pfx+'-foto'), url: getVal(pfx+'-url') };
 }
 
 // ==============================
@@ -839,6 +853,7 @@ function renderEigenQuiz() {
       ${field('eq-tijd', 'Tijdstip (optioneel)', eq.tijd || '', {placeholder:'20:00'})}
       ${field('eq-locatie', 'Locatie (optioneel)', eq.locatie || '', {placeholder:'Zaal De Lommelse Gazet, Lommel'})}
       ${field('eq-beschrijving', 'Beschrijving (optioneel)', eq.beschrijving || '', {type:'textarea', placeholder:'Een korte omschrijving van de quiz.'})}
+      ${field('eq-afbeelding', 'Affiche / afbeelding (optioneel)', eq.afbeelding || '', {placeholder:'https://...jpg', hint:'URL van je affiche. Wordt naast de tekst getoond.'})}
       ${field('eq-link', 'Link voor meer info (optioneel)', eq.link || '', {placeholder:'https://...', hint:'Bv. Facebook-event of Eventbrite.'})}
       <div class="form-actions">
         <button class="btn" onclick="saveEigenQuiz()">Toepassen</button>
@@ -846,14 +861,114 @@ function renderEigenQuiz() {
     </div>`;
 }
 
+// ==============================
+// TEKSTEN
+// ==============================
+function renderTeksten() {
+  const t = content.teksten || {};
+  const h = (s) => t[s] || {};
+  return `
+    <div class="section-title">Teksten</div>
+    <div class="section-sub">Pas titels, eyebrows en teksten aan. Gebruik *woord* voor schuine/oranje opmaak, en een nieuwe regel (Enter) voor een regelafbreking in titels.</div>
+
+    <div class="edit-form" style="max-width:700px; margin-bottom:24px">
+      <div class="edit-form-title">HERO</div>
+      <div class="form-grid">
+        ${field('t-hero-statement','Hoofdtekst (\\n = nieuwe regel)',h('hero').statement||'',{placeholder:'Te lui\\nom te *winnen.*'})}
+        ${field('t-hero-tagline','Tagline',h('hero').tagline||'')}
+      </div>
+      ${field('t-hero-quote','Citaat',h('hero').quote||'')}
+      ${field('t-hero-quoteAttr','Toeschrijving citaat',h('hero').quoteAttr||'')}
+      <div class="form-actions"><button class="btn" onclick="saveTeksten()">Toepassen</button></div>
+    </div>
+
+    <div class="edit-form" style="max-width:700px; margin-bottom:24px">
+      <div class="edit-form-title">OVER ONS</div>
+      <div class="form-grid">
+        ${field('t-over-eyebrow','Eyebrow (klein label)',h('over').eyebrow||'')}
+        ${field('t-over-heading','Titel',h('over').heading||'')}
+      </div>
+      ${field('t-over-lead','Introtekst',h('over').lead||'',{type:'textarea'})}
+      ${field('t-over-body1','Alinea 1',h('over').body1||'',{type:'textarea'})}
+      ${field('t-over-body2','Alinea 2',h('over').body2||'',{type:'textarea'})}
+      ${field('t-over-body3','Alinea 3',h('over').body3||'',{type:'textarea'})}
+      <div class="form-actions"><button class="btn" onclick="saveTeksten()">Toepassen</button></div>
+    </div>
+
+    <div class="edit-form" style="max-width:700px; margin-bottom:24px">
+      <div class="edit-form-title">SECTIES (eyebrows & titels)</div>
+      <div class="form-grid">
+        ${field('t-leuzen-eyebrow','Leuzen — eyebrow',h('leuzen').eyebrow||'')}
+        ${field('t-leuzen-heading','Leuzen — titel',h('leuzen').heading||'')}
+        ${field('t-kalender-eyebrow','Kalender — eyebrow',h('kalender').eyebrow||'')}
+        ${field('t-kalender-heading','Kalender — titel',h('kalender').heading||'')}
+        ${field('t-uitslagen-eyebrow','Uitslagen — eyebrow',h('uitslagen').eyebrow||'')}
+        ${field('t-uitslagen-heading','Uitslagen — titel',h('uitslagen').heading||'')}
+        ${field('t-leden-eyebrow','Leden — eyebrow',h('leden').eyebrow||'')}
+        ${field('t-leden-heading','Leden — titel',h('leden').heading||'')}
+        ${field('t-media-eyebrow','Pers — eyebrow',h('media').eyebrow||'')}
+        ${field('t-media-heading','Pers — titel',h('media').heading||'')}
+      </div>
+      <div class="form-actions"><button class="btn" onclick="saveTeksten()">Toepassen</button></div>
+    </div>
+
+    <div class="edit-form" style="max-width:700px">
+      <div class="edit-form-title">CONTACT</div>
+      ${field('t-contact-heading','Titel (\\n = nieuwe regel)',h('contact').heading||'')}
+      <div class="form-grid">
+        ${field('t-contact-email','E-mailadres',h('contact').email||'')}
+        ${field('t-contact-locatie','Locatie',h('contact').locatie||'')}
+        ${field('t-contact-voorwaarde','Voorwaarde',h('contact').voorwaarde||'')}
+      </div>
+      <div class="form-actions"><button class="btn" onclick="saveTeksten()">Toepassen</button></div>
+    </div>`;
+}
+
+function saveTeksten() {
+  if (!content.teksten) content.teksten = {};
+  const s = (k) => getVal(k);
+  content.teksten = {
+    hero: {
+      statement:  s('t-hero-statement'),
+      tagline:    s('t-hero-tagline'),
+      quote:      s('t-hero-quote'),
+      quoteAttr:  s('t-hero-quoteAttr')
+    },
+    over: {
+      eyebrow: s('t-over-eyebrow'),
+      heading: s('t-over-heading'),
+      lead:    s('t-over-lead'),
+      body1:   s('t-over-body1'),
+      body2:   s('t-over-body2'),
+      body3:   s('t-over-body3')
+    },
+    leuzen:   { eyebrow: s('t-leuzen-eyebrow'),   heading: s('t-leuzen-heading') },
+    kalender: { eyebrow: s('t-kalender-eyebrow'), heading: s('t-kalender-heading') },
+    uitslagen:{ eyebrow: s('t-uitslagen-eyebrow'),heading: s('t-uitslagen-heading') },
+    leden:    { eyebrow: s('t-leden-eyebrow'),    heading: s('t-leden-heading') },
+    media:    { eyebrow: s('t-media-eyebrow'),    heading: s('t-media-heading') },
+    contact: {
+      heading:   s('t-contact-heading'),
+      email:     s('t-contact-email'),
+      locatie:   s('t-contact-locatie'),
+      voorwaarde:s('t-contact-voorwaarde')
+    }
+  };
+  setStatus('Wijzigingen klaar — klik Opslaan om te publiceren.', '');
+}
+
 function saveEigenQuiz() {
+  const prevEq = content.eigenQuiz || {};
   content.eigenQuiz = {
     active:       getVal('eq-active'),
+    d:            prevEq.d || '',
+    m:            prevEq.m || '',
     titel:        getVal('eq-titel'),
     datum:        getVal('eq-datum'),
     tijd:         getVal('eq-tijd'),
     locatie:      getVal('eq-locatie'),
     beschrijving: getVal('eq-beschrijving'),
+    afbeelding:   getVal('eq-afbeelding'),
     link:         getVal('eq-link')
   };
   setStatus('Wijzigingen klaar — klik Opslaan om te publiceren.', '');

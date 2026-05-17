@@ -284,21 +284,24 @@
       "datum": "15.11.2025",
       "titel": "\"Te Lui Om Te Winnen\" wint dan toch één keer",
       "quote": "Niemand was meer verbaasd dan zijzelf, getuige de stille reactie aan tafel 7.",
-      "foto": ""
+      "foto": "",
+      "url": ""
     },
     {
       "bron": "De Lommelse Gazet",
       "datum": "11.10.2025",
       "titel": "Lokale ploeg derde bij FC Vandenberken",
       "quote": "Een knap resultaat, mits de borrelplank vooraf besteld.",
-      "foto": ""
+      "foto": "",
+      "url": ""
     },
     {
       "bron": "De Lommelse Gazet",
       "datum": "15.03.2026",
       "titel": "Klapkwis kent verrassende top tien",
       "quote": "Met 75 ploegen aan de start wordt vier op vier en zeventig opnieuw bewezen knap.",
-      "foto": ""
+      "foto": "",
+      "url": ""
     },
     {
       "bron": "De Lommelse Gazet",
@@ -310,11 +313,56 @@
   ],
   "eigenQuiz": {
     "active": true,
+    "d": "13",
+    "m": "NOV",
     "titel": "Wij organiseren zelf een quiz!",
     "datum": "vrijdag 13 november",
     "tijd": "",
     "locatie": "",
     "beschrijving": "",
+    "afbeelding": "",
     "link": ""
+  },
+  "teksten": {
+    "hero": {
+      "statement": "Te lui\nom te *winnen.*",
+      "tagline": "Vijf vaste leden. Tien quizzen per jaar. Eén onuitgesproken pact: nooit te vroeg de borrelplank bestellen.",
+      "quote": "Als je niet wint, voelt elke vierde plaats nog vrij comfortabel.",
+      "quoteAttr": "— ongeschreven huishoudelijk reglement"
+    },
+    "over": {
+      "eyebrow": "Over ons",
+      "heading": "Een quizploeg met *verdacht weinig* ambitie.",
+      "lead": "Wij zijn *Te Lui Om Te Winnen.* Een vijftal vaste leden uit Lommel die al ongeveer tien jaar quizzen en zich onderscheiden door een opvallende specialiteit: borrelplanken bestellen op het moment dat ze net uitverkocht zijn.",
+      "body1": "We doen mee aan zo'n tien quizzen per jaar in en rond Lommel. Onze sterke vakgebieden? Daar zijn we zelf nog niet uit. Onze zwakke vakgebieden? Onbekend, maar legio.",
+      "body2": "We zijn niet de luidste ploeg. Niet de strakste. Niet de snelste met het opheffen van de hand. Maar als de jury de laatste kruisjes zet en wij eindigen ergens tussen plek 4 en 7 — dan was het een goede avond.",
+      "body3": "We hebben één keer gewonnen. Dat blijft voorlopig genoeg."
+    },
+    "leuzen": {
+      "eyebrow": "Leuzen",
+      "heading": "Onuitgesproken *regels*,\nluidop herhaald."
+    },
+    "kalender": {
+      "eyebrow": "Kalender 2026",
+      "heading": "Wat staat er *nog* op de planning."
+    },
+    "uitslagen": {
+      "eyebrow": "Palmares",
+      "heading": "De koude, harde, *bescheiden* cijfers."
+    },
+    "leden": {
+      "eyebrow": "De ploeg",
+      "heading": "Zes mensen. *Eén* tafel."
+    },
+    "media": {
+      "eyebrow": "In de pers",
+      "heading": "Vermeld in *De Lommelse Gazet.*"
+    },
+    "contact": {
+      "heading": "Quiz te *verdedigen?*\nWe denken erover na.",
+      "email": "info@teluiomtewinnen.be",
+      "locatie": "Lommel, België",
+      "voorwaarde": "Borrelplank verzekerd"
+    }
   }
 }
