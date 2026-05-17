@@ -206,12 +206,10 @@ body[data-mode="warm"] .nav-logo img {
   display: block;
   width: 20px;
   height: 1.5px;
-  background: var(--teal-ink);
+  background: var(--ink);
   border-radius: 1px;
   transition: transform 0.3s ease, opacity 0.2s ease;
 }
-body[data-mode="dark"] .nav-burger { border-color: rgba(240, 234, 217, 0.4); }
-body[data-mode="dark"] .nav-burger span { background: var(--paper-fg); }
 .nav-burger.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
 .nav-burger.is-open span:nth-child(2) { opacity: 0; }
 .nav-burger.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
