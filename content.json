@@ -307,5 +307,14 @@
       "quote": "De ploeg gaf na afloop 'geen verdere commentaar' en bestelde een plank.",
       "foto": ""
     }
-  ]
+  ],
+  "eigenQuiz": {
+    "active": true,
+    "titel": "Wij organiseren zelf een quiz!",
+    "datum": "vrijdag 13 november",
+    "tijd": "",
+    "locatie": "",
+    "beschrijving": "",
+    "link": ""
+  }
 }

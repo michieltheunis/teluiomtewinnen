@@ -46,10 +46,11 @@ function App() {
       {tweaks.showProgress && <ScrollProgress />}
       <Nav />
       <Hero uitslagen={content.uitslagen} kalender={content.kalender} />
+      {content.eigenQuiz?.active && <EigenQuizBanner eq={content.eigenQuiz} />}
       <About />
       {tweaks.showMottos && <Mottos mottos={content.mottos} />}
       <Uitslagen uitslagen={content.uitslagen} />
-      <Kalender kalender={content.kalender} />
+      <Kalender kalender={content.kalender} eigenQuiz={content.eigenQuiz} />
       <Leden leden={content.leden} />
       {tweaks.showMedia && <Media media={content.media} />}
       <Contact />

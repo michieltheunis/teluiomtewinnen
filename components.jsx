@@ -207,8 +207,28 @@ function Mottos({ mottos = [] }) {
     </section>);
 }
 
+// ----- EigenQuizBanner -----
+function EigenQuizBanner({ eq }) {
+  if (!eq || !eq.active) return null;
+  const meta = [eq.locatie, eq.tijd].filter(Boolean).join(' · ');
+  return (
+    <section className="eigen-quiz-banner reveal">
+      <div className="shell">
+        <div className="eqb-inner">
+          <div className="eqb-label">Eigen quiz · {eq.datum}</div>
+          <div className="eqb-titel">{eq.titel}</div>
+          {meta && <div className="eqb-meta">{meta}</div>}
+          {eq.beschrijving && <div className="eqb-desc">{eq.beschrijving}</div>}
+          {eq.link && <a className="eqb-link" href={eq.link} target="_blank" rel="noopener">Meer info →</a>}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ----- Kalender -----
-function Kalender({ kalender = [] }) {
+function Kalender({ kalender = [], eigenQuiz }) {
+  const eq = eigenQuiz && eigenQuiz.active ? eigenQuiz : null;
   return (
     <section className="section" id="kalender">
       <div className="shell">
@@ -218,6 +238,20 @@ function Kalender({ kalender = [] }) {
           </div>
           <h2>Wat staat er <em>nog</em> op de planning.</h2>
         </div>
+        {eq && (
+          <div className="kal-row kal-host reveal">
+            <div className="kal-date">
+              <div className="date-d">{eq.datum.replace(/\D+(\d+)\D+/, '$1') || '13'}</div>
+              <span className="date-m">NOV '25</span>
+            </div>
+            <div className="kal-main">
+              <div className="kal-host-badge">WIJ ORGANISEREN</div>
+              <div className="name">{eq.titel}</div>
+              <div className="ploeg">{[eq.locatie, eq.tijd].filter(Boolean).join(' · ') || eq.datum}</div>
+            </div>
+            {eq.link && <a className="kal-host-link where" href={eq.link} target="_blank" rel="noopener">Info →</a>}
+          </div>
+        )}
         <div className="kalender-list reveal-stagger">
           {kalender.map((k, i) =>
             <div className="kal-row" key={i}>

@@ -248,6 +248,7 @@ body { font-family: var(--font); background: var(--bg); color: var(--fg); font-s
     <button class="tab" onclick="switchTab('leden', this)">Leden</button>
     <button class="tab" onclick="switchTab('mottos', this)">Motto's</button>
     <button class="tab" onclick="switchTab('media', this)">Persartikelen</button>
+    <button class="tab" onclick="switchTab('eigenquiz', this)">Eigen quiz</button>
   </div>
 
   <div class="content" id="content-area"></div>
@@ -390,6 +391,7 @@ function renderTab() {
   else if (currentTab === 'leden') area.innerHTML = renderLeden();
   else if (currentTab === 'mottos') area.innerHTML = renderMottos();
   else if (currentTab === 'media') area.innerHTML = renderMedia();
+  else if (currentTab === 'eigenquiz') area.innerHTML = renderEigenQuiz();
 }
 
 // ---- Confirm dialog ----
@@ -820,6 +822,41 @@ function clipForm(pfx, c, onSave, onCancel) {
 }
 function readClipForm(pfx) {
   return { bron: getVal(pfx+'-bron'), datum: getVal(pfx+'-datum'), titel: getVal(pfx+'-titel'), quote: getVal(pfx+'-quote'), foto: getVal(pfx+'-foto') };
+}
+
+// ==============================
+// EIGEN QUIZ
+// ==============================
+function renderEigenQuiz() {
+  const eq = content.eigenQuiz || {};
+  return `
+    <div class="section-title">Eigen quiz</div>
+    <div class="section-sub">Aankondiging voor een quiz die jullie zelf organiseren. Zet "Actief tonen" uit om de aankondiging te verbergen.</div>
+    <div class="edit-form" style="max-width:640px">
+      ${field('eq-active', 'Actief tonen op de site', eq.active || false, {type:'checkbox'})}
+      ${field('eq-titel', 'Titel', eq.titel || '', {placeholder:'Wij organiseren zelf een quiz!'})}
+      ${field('eq-datum', 'Datum', eq.datum || '', {placeholder:'vrijdag 13 november'})}
+      ${field('eq-tijd', 'Tijdstip (optioneel)', eq.tijd || '', {placeholder:'20:00'})}
+      ${field('eq-locatie', 'Locatie (optioneel)', eq.locatie || '', {placeholder:'Zaal De Lommelse Gazet, Lommel'})}
+      ${field('eq-beschrijving', 'Beschrijving (optioneel)', eq.beschrijving || '', {type:'textarea', placeholder:'Een korte omschrijving van de quiz.'})}
+      ${field('eq-link', 'Link voor meer info (optioneel)', eq.link || '', {placeholder:'https://...', hint:'Bv. Facebook-event of Eventbrite.'})}
+      <div class="form-actions">
+        <button class="btn" onclick="saveEigenQuiz()">Toepassen</button>
+      </div>
+    </div>`;
+}
+
+function saveEigenQuiz() {
+  content.eigenQuiz = {
+    active:       getVal('eq-active'),
+    titel:        getVal('eq-titel'),
+    datum:        getVal('eq-datum'),
+    tijd:         getVal('eq-tijd'),
+    locatie:      getVal('eq-locatie'),
+    beschrijving: getVal('eq-beschrijving'),
+    link:         getVal('eq-link')
+  };
+  setStatus('Wijzigingen klaar — klik Opslaan om te publiceren.', '');
 }
 </script>
 </body>

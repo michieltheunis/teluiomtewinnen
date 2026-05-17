@@ -523,6 +523,82 @@ body[data-mode="dark"] .nav-drawer-inner a { color: var(--panel-fg); border-bott
   text-align: right;
 }
 
+/* ----- EIGEN QUIZ BANNER ----- */
+.eigen-quiz-banner {
+  background: var(--panel-bg);
+  padding: 56px 0;
+  border-top: 2px solid var(--orange);
+}
+.eqb-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.eqb-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--orange);
+  text-transform: uppercase;
+}
+.eqb-titel {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--panel-fg);
+  line-height: 1.1;
+}
+.eqb-meta {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--panel-fg-soft, rgba(240,234,217,0.6));
+}
+.eqb-desc {
+  font-size: 16px;
+  color: var(--panel-fg-soft, rgba(240,234,217,0.7));
+  max-width: 560px;
+  line-height: 1.6;
+}
+.eqb-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--orange);
+  text-decoration: none;
+  border-bottom: 1px solid var(--orange);
+  padding-bottom: 2px;
+  width: fit-content;
+  transition: opacity 0.2s;
+}
+.eqb-link:hover { opacity: 0.75; }
+
+/* ----- KALENDER HOST BADGE ----- */
+.kal-row.kal-host {
+  border-left: 3px solid var(--orange);
+  padding-left: 20px;
+  background: color-mix(in oklab, var(--orange) 5%, transparent);
+}
+.kal-host-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--orange);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.kal-host-link {
+  color: var(--orange);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.kal-host-link:hover { text-decoration: underline; }
+
 /* ----- KALENDER ----- */
 .kalender-list {
   display: flex;
